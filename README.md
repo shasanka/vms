@@ -1,5 +1,16 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Environment Variable
+
+You will have to create a .env file in the root.
+Then add this:
+
+```bash
+MONGODB_URI=<YOUR MONGODB URI>
+```
+
+This is done so that you can connect to the mongodb and do crazy database things.
+
 ## Getting Started
 
 First, run the development server:
@@ -13,17 +24,6 @@ pnpm dev
 # or
 bun dev
 ```
-
-## Environment Variable
-
-You will have to create a .env file in the root.
-Then add this:
-
-```bash
-MONGODB_URI=<YOUR MONGODB URI>
-```
-
-This is done so that you can connect to the mongodb and do crazy database things.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
