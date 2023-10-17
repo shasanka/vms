@@ -21,11 +21,33 @@ const RegisterForm = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { email, name, password } = user;
     if (!name || !email || !password) {
       setError("*All fields are required");
+    }
+
+    try {
+      const res = await fetch("api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+      if (res.ok) {
+        setUser((prevState) => ({
+          ...prevState,
+          email: "",
+          name: "",
+          password: "",
+        }));
+      } else {
+        console.log("User registration failed");
+      }
+    } catch (E) {
+      console.log("Error during registration.", E);
     }
   };
 
@@ -39,18 +61,21 @@ const RegisterForm = () => {
             type="text"
             placeholder="Full Name"
             name="name"
+            value={user.name}
             onChange={handleChange}
           />
           <input
             type="text"
             placeholder="Email"
             name="email"
+            value={user.email}
             onChange={handleChange}
           />
           <input
             type="text"
             placeholder="Password"
             name="password"
+            value={user.password}
             onChange={handleChange}
           />
           <button
