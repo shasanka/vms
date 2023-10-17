@@ -17,7 +17,7 @@ bun dev
 ## Environment Variable
 
 You will have to create a .env file in the root.
-Then create
+Then add this:
 
 ```bash
 MONGODB_URI=<YOUR MONGODB URI>
