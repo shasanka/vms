@@ -14,6 +14,17 @@ pnpm dev
 bun dev
 ```
 
+## Environment Variable
+
+You will have to create a .env file in the root.
+Then create
+
+```bash
+MONGODB_URI=<YOUR MONGODB URI>
+```
+
+This is done so that you can connect to the mongodb and do crazy database things.
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
