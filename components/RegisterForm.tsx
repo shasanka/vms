@@ -1,12 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React, { FormEvent, SyntheticEvent, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 interface IUser {
   name: string;
   email: string;
   password: string;
 }
 const RegisterForm = () => {
+  const router = useRouter()
   const [user, setUser] = useState<IUser>({
     name: "",
     email: "",
@@ -21,14 +23,29 @@ const RegisterForm = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    
     const { email, name, password } = user;
     if (!name || !email || !password) {
       setError("*All fields are required");
     }
 
     try {
+      const resUserExist = await fetch("api/userexist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+      const { user:userExist } = await resUserExist.json();
+      if(userExist){
+        setError('User already exist');
+        return;
+      }
+     
+
       const res = await fetch("api/register", {
         method: "POST",
         headers: {
@@ -43,6 +60,8 @@ const RegisterForm = () => {
           name: "",
           password: "",
         }));
+
+      router.push('/')
       } else {
         console.log("User registration failed");
       }
@@ -72,9 +91,9 @@ const RegisterForm = () => {
             onChange={handleChange}
           />
           <input
-            type="text"
             placeholder="Password"
             name="password"
+            type='password'
             value={user.password}
             onChange={handleChange}
           />
