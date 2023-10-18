@@ -1,12 +1,19 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+##Database
+Install mongoDB on the machine to run the application.
+After that set the environment variables.
+
 ## Environment Variable
 
 You will have to create a .env file in the root.
 Then add this:
 
 ```bash
-MONGODB_URI=<YOUR MONGODB URI>
+MONGODB_CONNECT_URI=mongodb://localhost:27017/vms
+NEXTAUTH_SECRET=<some kind of string>
+NEXTAUTH_URL=http://localhost:3000
+
 ```
 
 This is done so that you can connect to the mongodb and do crazy database things.
