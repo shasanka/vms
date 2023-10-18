@@ -1,0 +1,16 @@
+after login
+show form {
+mobile number on mobile number search if mobile number exist then prefill
+name 
+address
+
+state assam preselct 
+district
+pincode 
+
+whom to meet 
+department 
+generate pass button : show pdf same fields with logo qr code generated with url string 
+
+}
+
