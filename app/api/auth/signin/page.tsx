@@ -31,13 +31,14 @@ const SignIn = () => {
         password: user.password,
         redirect: false,
       });
+      console.log("🚀 ~ file: page.tsx:34 ~ handleSubmit ~ res:", res);
 
       if (res?.error) {
         setError("Invalid credentials");
         return;
       }
 
-      router.replace("/dashboard");
+      router.replace("/home");
     } catch (E) {
       console.log("Error in logging in:", E);
     }

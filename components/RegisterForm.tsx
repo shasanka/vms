@@ -84,7 +84,7 @@ const RegisterForm = () => {
             onChange={handleChange}
           />
           <input
-            type="email"
+            type="text"
             placeholder="Email"
             name="email"
             value={user.email}
