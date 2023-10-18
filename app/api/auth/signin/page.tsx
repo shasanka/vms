@@ -48,7 +48,7 @@ const SignIn = () => {
         <h1 className="text-xl font-bold my-4">Enter the details</h1>
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           <input
-            value={user.email}
+            // value={user.email}
             type="text"
             placeholder="Email"
             name="email"
@@ -56,7 +56,7 @@ const SignIn = () => {
             required
           />
           <input
-            value={user.password}
+            // value={user.password}
             type="password"
             placeholder="Password"
             name="password"
