@@ -66,11 +66,11 @@ const LoginForm = () => {
             onChange={onChange}
             required
           />
-          <button className="bg-green-600 text-white font-bold cursor-pointer px-5 py-2 rounded-lg">
+          <button className="bg-green-600 hover:bg-green-800 text-white font-bold cursor-pointer px-5 py-2 rounded-lg">
             Login
           </button>
           {error && (
-            <div className="bg-red-500 px-2 text-white w-fit rounded-md text-sm py-1 px-3 mt-2">
+            <div className="bg-red-500 text-white w-fit rounded-md text-sm py-1 px-3 mt-2">
               {error}
             </div>
           )}

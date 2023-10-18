@@ -64,7 +64,7 @@ const SignIn = () => {
             onChange={onChange}
             required
           />
-          <button className="bg-green-600 text-white font-bold cursor-pointer px-5 py-2 rounded-lg">
+          <button className="bg-green-600 hover:bg-green-700 text-white font-bold cursor-pointer px-5 py-2 rounded-lg">
             Login
           </button>
           {error && (
