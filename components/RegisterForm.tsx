@@ -1,14 +1,15 @@
 "use client";
-import React, { FormEvent, SyntheticEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-interface IUser {
+
+export interface IUser {
   name: string;
   email: string;
   password: string;
 }
 const RegisterForm = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [user, setUser] = useState<IUser>({
     name: "",
     email: "",
@@ -25,7 +26,7 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+
     const { email, name, password } = user;
     if (!name || !email || !password) {
       setError("*All fields are required");
@@ -39,12 +40,11 @@ const RegisterForm = () => {
         },
         body: JSON.stringify({ email }),
       });
-      const { user:userExist } = await resUserExist.json();
-      if(userExist){
-        setError('User already exist');
+      const { user: userExist } = await resUserExist.json();
+      if (userExist) {
+        setError("User already exist");
         return;
       }
-     
 
       const res = await fetch("api/register", {
         method: "POST",
@@ -61,7 +61,7 @@ const RegisterForm = () => {
           password: "",
         }));
 
-      router.push('/')
+        router.push("/");
       } else {
         console.log("User registration failed");
       }
@@ -84,7 +84,7 @@ const RegisterForm = () => {
             onChange={handleChange}
           />
           <input
-            type="text"
+            type="email"
             placeholder="Email"
             name="email"
             value={user.email}
@@ -93,7 +93,7 @@ const RegisterForm = () => {
           <input
             placeholder="Password"
             name="password"
-            type='password'
+            type="password"
             value={user.password}
             onChange={handleChange}
           />
@@ -104,7 +104,7 @@ const RegisterForm = () => {
             Register
           </button>
           {error && (
-            <div className="bg-red-500 px-2 text-white w-fit rounded-md text-sm py-1 px-3 mt-2">
+            <div className="bg-red-500 text-white w-fit rounded-md text-sm py-1 px-3 mt-2">
               {error}
             </div>
           )}

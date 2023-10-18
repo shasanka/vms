@@ -2,15 +2,15 @@
 
 import React, { FormEvent, useState } from "react";
 import Link from "next/link";
-import { IUser } from "./RegisterForm";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { IUser } from "@/components/RegisterForm";
 
-const LoginForm = () => {
+const SignIn = () => {
   const router = useRouter();
   const [user, setUser] = useState<Pick<IUser, "email" | "password">>({
-    email: "",
-    password: "",
+    email: "testing@gmail.com",
+    password: "123123",
   });
   const [error, setError] = useState<string>("");
 
@@ -31,18 +31,14 @@ const LoginForm = () => {
         password: user.password,
         redirect: false,
       });
-      console.log("🚀 ~ file: LoginForm.tsx:34 ~ handleSubmit ~ res:", res);
+      console.log("🚀 ~ file: signin.tsx:34 ~ handleSubmit ~ res:", res);
 
       if (res?.error) {
-        console.log(
-          "🚀 ~ file: LoginForm.tsx:36 ~ handleSubmit ~ res?.error:",
-          res?.error
-        );
         setError("Invalid credentials");
         return;
       }
 
-      router.replace("dashboard");
+      router.replace("/dashboard");
     } catch (E) {
       console.log("Error in logging in:", E);
     }
@@ -53,6 +49,7 @@ const LoginForm = () => {
         <h1 className="text-xl font-bold my-4">Enter the details</h1>
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           <input
+            value={user.email}
             type="text"
             placeholder="Email"
             name="email"
@@ -60,6 +57,7 @@ const LoginForm = () => {
             required
           />
           <input
+            value={user.password}
             type="password"
             placeholder="Password"
             name="password"
@@ -70,7 +68,7 @@ const LoginForm = () => {
             Login
           </button>
           {error && (
-            <div className="bg-red-500 px-2 text-white w-fit rounded-md text-sm py-1 px-3 mt-2">
+            <div className="bg-red-500 text-white w-fit rounded-md text-sm py-1 px-3 mt-2">
               {error}
             </div>
           )}
@@ -86,4 +84,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default SignIn;

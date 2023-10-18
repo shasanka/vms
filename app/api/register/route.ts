@@ -6,7 +6,6 @@ import bcrypt from 'bcryptjs'
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    console.log("🚀 ~ file: route.ts:9 ~ POST ~ body:", body)
     const { name, email, password } = body
     const hashedPassword = await bcrypt.hash(password, 10);
 
