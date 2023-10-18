@@ -9,8 +9,8 @@ import { IUser } from "@/components/RegisterForm";
 const SignIn = () => {
   const router = useRouter();
   const [user, setUser] = useState<Pick<IUser, "email" | "password">>({
-    email: "testing@gmail.com",
-    password: "123123",
+    email: "",
+    password: "",
   });
   const [error, setError] = useState<string>("");
 
