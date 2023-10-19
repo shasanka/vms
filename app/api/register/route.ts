@@ -11,6 +11,10 @@ export async function POST(req: NextRequest) {
 
 
     await connectMongoDB();
+    const oldUser = await User.findOne({ email });
+    if (oldUser) {
+      return NextResponse.json({ error: 'Email already registered' }, { status: 409 })
+    }
     await User.create({
       name, email, password: hashedPassword
     })

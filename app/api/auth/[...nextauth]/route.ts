@@ -4,6 +4,7 @@ import { AuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from 'bcryptjs'
+import { NextResponse } from "next/server";
 
 
 export const authOptions: AuthOptions = {
@@ -11,28 +12,27 @@ export const authOptions: AuthOptions = {
         CredentialsProvider({
             name: 'credentials',
             credentials: {
-                email: { label: "Email", type: "email", placeholder: "email@email.com" },
-                password: { label: "Password", type: "password", placeholder: 'Password' }
             },
             async authorize(credentials, req) {
-                const email = credentials?.email;
-                const password = credentials?.password
+                const { email, password } = credentials as { email: string, password: string };
+
                 if (!email || !password) {
-                    return null
+                    return NextResponse.json({ error: 'Invalid data' }, { status: 422 })
                 }
 
                 try {
                     await connectMongoDB()
                     const user = await User.findOne({ email })
-                    if (!user) return null;
+                    if (!user) return NextResponse.json({ error: 'Error in credentials' }, { status: 500 });
 
                     const passwordMatch = await bcrypt.compare(password, user.password)
-                    if (!passwordMatch) return null
+                    if (!passwordMatch) return NextResponse.json({ error: 'Error in credentials' }, { status: 500 })
 
                     return user
                 } catch (E) {
-                    console.log('Error connecting to database', E)
-                    return null
+                    // return null
+                    console.log(E)
+                    return NextResponse.json({ error: 'Error in credentials' }, { status: 500 })
                 }
             }
         })
@@ -43,6 +43,14 @@ export const authOptions: AuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
     pages: {
         signIn: '/auth/signin'
+    },
+    callbacks: {
+        jwt({ token, user, session }) {
+            return token
+        },
+        session({ session, token, user }) {
+            return session
+        }
     }
 }
 

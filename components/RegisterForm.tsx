@@ -24,7 +24,7 @@ const RegisterForm = () => {
     }));
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const { email, name, password } = user;
@@ -33,19 +33,6 @@ const RegisterForm = () => {
     }
 
     try {
-      const resUserExist = await fetch("api/userexist", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-      const { user: userExist } = await resUserExist.json();
-      if (userExist) {
-        setError("User already exist");
-        return;
-      }
-
       const res = await fetch("api/register", {
         method: "POST",
         headers: {
@@ -53,16 +40,11 @@ const RegisterForm = () => {
         },
         body: JSON.stringify(user),
       });
+      const jsonRes = await res.json();
       if (res.ok) {
-        setUser((prevState) => ({
-          ...prevState,
-          email: "",
-          name: "",
-          password: "",
-        }));
-
-        router.push("/");
+        router.replace("/signin");
       } else {
+        setError(jsonRes.error);
         console.log("User registration failed");
       }
     } catch (E) {

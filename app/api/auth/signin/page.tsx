@@ -34,8 +34,7 @@ const SignIn = () => {
       console.log("🚀 ~ file: page.tsx:34 ~ handleSubmit ~ res:", res);
 
       if (res?.error) {
-        setError("Invalid credentials");
-        return;
+        return setError("Invalid credentials");
       }
 
       router.replace("/home");
