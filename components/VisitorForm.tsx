@@ -1,20 +1,7 @@
 "use client";
-import { addVisitor } from "@/actions/addVisitor";
 import { IVisitor } from "@/interface/common";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
-
-const validationSchema = z.object({
-  mobileno: z.string().min(10).max(10),
-  name: z.string().trim(),
-  address: z.string().trim(),
-  state: z.string().trim(),
-  district: z.string().trim(),
-  pincode: z.string().min(6).max(6),
-  tomeet: z.string().trim(),
-  department: z.string().trim(),
-});
 
 const VisitorForm = () => {
   const {
@@ -24,26 +11,6 @@ const VisitorForm = () => {
     setError,
     formState: { errors },
   } = useForm<IVisitor>();
-  // const formHandler = async (formData: FormData) => {
-  //client side validation
-  // const newVisitor = {
-  //   mobileno: formData.get("mobileno"),
-  //   name: formData.get("name"),
-  //   address: formData.get("address"),
-  //   state: formData.get("state"),
-  //   district: formData.get("district"),
-  //   pincode: formData.get("pincode"),
-  //   tomeet: formData.get("tomeet"),
-  //   department: formData.get("department"),
-  // };
-  // const validation = validationSchema.safeParse(newVisitor);
-  // if (!validation.success) {
-  //   console.log(validation.error.issues);
-  // }
-
-  //   await addVisitor(formData);
-  // };
-
   const onSubmit: SubmitHandler<IVisitor> = async (data) => {
     console.log(
       "🚀 ~ file: VisitorForm.tsx:47 ~ constonSubmit:SubmitHandler<IVisitor>= ~ data:",
@@ -53,6 +20,19 @@ const VisitorForm = () => {
     // await addVisitor(formData);
   };
 
+  const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
+    const params = {
+      data: "Assam",
+    };
+    const searchParams = new URLSearchParams(params).toString();
+    const url = `/api/auth/district?${searchParams}`;
+    const res = await fetch(url, {
+      method: "GET",
+    });
+    console.log("🚀 ~ file: VisitorForm.tsx:34 ~ handleChange ~ res:", res);
+  };
+
   console.log(errors);
   return (
     // <form action={formHandler} onSubmit={handleSubmit}>
@@ -60,7 +40,6 @@ const VisitorForm = () => {
       <div className="grid grid-cols-2 gap-2">
         <div className="grid grid-rows">
           <input
-            //   name="mobileno"
             placeholder="Mobile Number"
             type="number"
             required
@@ -93,18 +72,17 @@ const VisitorForm = () => {
           required
           {...register("address")}
         />{" "}
-        <input
-          placeholder="State"
-          type="text"
-          required
-          {...register("state")}
-        />{" "}
-        <input
+        <input placeholder="State" type="" required {...register("state")} />{" "}
+        <select
           placeholder="District"
-          type="text"
-          required
           {...register("district")}
-        />{" "}
+          onChange={handleChange}
+        >
+          <option value="Assam">Assam</option>
+          <option value="Maharastra">Maharastra</option>
+          <option value="opel">Opel</option>
+          <option value="audi">Audi</option>
+        </select>
         <input
           placeholder="Pincode"
           type="number"
