@@ -17,22 +17,20 @@ export const authOptions: AuthOptions = {
                 const { email, password } = credentials as { email: string, password: string };
 
                 if (!email || !password) {
-                    return NextResponse.json({ error: 'Invalid data' }, { status: 422 })
+                    return null
                 }
 
                 try {
                     await connectMongoDB()
                     const user = await User.findOne({ email })
-                    if (!user) return NextResponse.json({ error: 'Error in credentials' }, { status: 500 });
+                    if (!user) return null
 
                     const passwordMatch = await bcrypt.compare(password, user.password)
-                    if (!passwordMatch) return NextResponse.json({ error: 'Error in credentials' }, { status: 500 })
+                    if (!passwordMatch) return null
 
                     return user
                 } catch (E) {
-                    // return null
-                    console.log(E)
-                    return NextResponse.json({ error: 'Error in credentials' }, { status: 500 })
+                    return null
                 }
             }
         })
@@ -46,9 +44,11 @@ export const authOptions: AuthOptions = {
     },
     callbacks: {
         jwt({ token, user, session }) {
+
             return token
         },
         session({ session, token, user }) {
+
             return session
         }
     }

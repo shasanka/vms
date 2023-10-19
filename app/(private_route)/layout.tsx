@@ -7,6 +7,7 @@ export default async function PrivateRoute({
   children: ReactNode;
 }) {
   const session = await getServerSession();
+  console.log("🚀 ~ file: layout.tsx:10 ~ session:", session);
   if (!session?.user) redirect("/signin");
   return <>{children}</>;
 }
