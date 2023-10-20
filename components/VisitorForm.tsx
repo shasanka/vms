@@ -1,42 +1,28 @@
 "use client";
+import { DistrictType } from "@/app/api/auth/district/route";
+import { useVisitorFormHooks } from "@/hooks/useVisitorFormHooks";
 import { IVisitor } from "@/interface/common";
 import React from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 const VisitorForm = () => {
   const {
     register,
     handleSubmit,
-    watch,
-    setError,
     formState: { errors },
   } = useForm<IVisitor>();
-  const onSubmit: SubmitHandler<IVisitor> = async (data) => {
-    console.log(
-      "🚀 ~ file: VisitorForm.tsx:47 ~ constonSubmit:SubmitHandler<IVisitor>= ~ data:",
-      data
-    );
-    console.log(errors);
-    // await addVisitor(formData);
-  };
 
-  const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    e.preventDefault();
-    const params = {
-      data: "Assam",
-    };
-    const searchParams = new URLSearchParams(params).toString();
-    const url = `/api/auth/district?${searchParams}`;
-    const res = await fetch(url, {
-      method: "GET",
-    });
-    console.log("🚀 ~ file: VisitorForm.tsx:34 ~ handleChange ~ res:", res);
-  };
+  const {
+    districts,
+    pincodes,
+    states,
+    handleDistrictChange,
+    handleStateChange,
+  } = useVisitorFormHooks();
 
-  console.log(errors);
   return (
     // <form action={formHandler} onSubmit={handleSubmit}>
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form>
       <div className="grid grid-cols-2 gap-2">
         <div className="grid grid-rows">
           <input
@@ -65,30 +51,42 @@ const VisitorForm = () => {
           type="text"
           required
           {...register("name")}
-        />{" "}
+        />
         <input
           placeholder="Address"
           type="text"
           required
           {...register("address")}
-        />{" "}
-        <input placeholder="State" type="" required {...register("state")} />{" "}
+        />
+        <select
+          placeholder="State"
+          {...register("state")}
+          onChange={handleStateChange}
+        >
+          {states.map((state) => (
+            <option key={state} value={state} defaultValue={"ASSAM"}>
+              {state}
+            </option>
+          ))}
+        </select>
         <select
           placeholder="District"
           {...register("district")}
-          onChange={handleChange}
+          onChange={handleDistrictChange}
         >
-          <option value="Assam">Assam</option>
-          <option value="Maharastra">Maharastra</option>
-          <option value="opel">Opel</option>
-          <option value="audi">Audi</option>
+          {districts?.map((district: DistrictType) => (
+            <option key={district._id} value={district._id}>
+              {district.name}
+            </option>
+          ))}
         </select>
-        <input
-          placeholder="Pincode"
-          type="number"
-          required
-          {...register("pincode")}
-        />{" "}
+        <select {...register("pincode")} placeholder="Pincode">
+          {pincodes?.map((pincode) => (
+            <option key={pincode} value={pincode}>
+              {pincode}
+            </option>
+          ))}
+        </select>
         <input
           placeholder="Whom to meet?"
           type="text"

@@ -1,10 +1,38 @@
-import { NextApiRequest } from "next";
-import { NextRequest, NextResponse } from "next/server";
 
+import { NextRequest, NextResponse } from "next/server";
+import { connectMongoDB } from "@/lib/mongodb";
+import StateModel from "@/models/state";
+import { ObjectId } from "mongoose";
+
+
+
+export type DistrictType = {
+    _id: string;
+    name: string;
+    // Add other fields if needed
+};
+export type StateType = {
+    _id?: ObjectId,
+    name: string,
+    districtsID: DistrictType[],
+}
 export async function GET(req: NextRequest) {
 
-    const d = req.nextUrl.searchParams
-    console.log(d.get('data'))
-    return NextResponse.json({ message: 'GO it' }, { status: 200 })
+    const state = req.nextUrl.searchParams.get('state')!
+    try {
+        await connectMongoDB();
+
+        const states = await StateModel.findOne({ name: state.toUpperCase() }).populate('districtsID')
+        const districtDetails = states.districtsID.map((district: DistrictType) => ({
+            _id: district._id.toString(),
+            name: district.name,
+        }));
+
+        return NextResponse.json({ data: districtDetails }, { status: 200 });
+
+    } catch (E) {
+        console.log(E)
+    }
+
 }
 
