@@ -14,3 +14,15 @@ export interface IVisitor {
     department: string,
 
 }
+
+export interface IDistrict {
+    id?: string,
+    name: string,
+    pincodes: number[]
+}
+export interface IState {
+    _id?: string;
+    name: string;
+    districtID: IDistrict[];
+}
+

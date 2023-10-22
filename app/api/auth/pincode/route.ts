@@ -1,3 +1,4 @@
+import { connectMongoDB } from "@/lib/mongodb";
 import DistrictModel from "@/models/district";
 import { ObjectId } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
@@ -9,6 +10,7 @@ export type PincodeType = {
 export async function GET(req: NextRequest) {
     try {
         const districtID = req.nextUrl.searchParams.get('districtID');
+        await connectMongoDB()
         const pincodes = await DistrictModel.findById(districtID);
         return NextResponse.json({ data: pincodes }, { status: 200 });
     } catch (e) {

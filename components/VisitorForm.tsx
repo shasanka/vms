@@ -63,8 +63,8 @@ const VisitorForm = () => {
           {...register("state")}
           onChange={handleStateChange}
         >
-          {states.map((state) => (
-            <option key={state} value={state} defaultValue={"ASSAM"}>
+          {states.map((state, idx) => (
+            <option key={idx} value={state} defaultValue={"ASSAM"}>
               {state}
             </option>
           ))}
@@ -74,8 +74,8 @@ const VisitorForm = () => {
           {...register("district")}
           onChange={handleDistrictChange}
         >
-          {districts?.map((district: DistrictType) => (
-            <option key={district._id} value={district._id}>
+          {districts?.map((district: DistrictType, idx) => (
+            <option key={idx} value={district._id}>
               {district.name}
             </option>
           ))}

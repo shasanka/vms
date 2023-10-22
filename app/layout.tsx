@@ -2,6 +2,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Provider from "./Provider";
+import { TopBar } from "@/components/TopBar";
+import { LeftSideBar } from "@/components/LeftSideBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* <Provider>{children}</Provider> */}
+        {/* <TopBar />
+        <main className="flex flex-row">
+          <LeftSideBar />
+          <section className="flex min-h-screen flex-1 flex-col items-center bg-dark-1 px-6 pb-10 pt-28 max-md:pb-32 sm:px-10;">
+          </section>
+        </main> */}
         {children}
       </body>
     </html>

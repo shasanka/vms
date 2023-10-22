@@ -1,13 +1,6 @@
 import mongoose, { Schema, models } from 'mongoose';
-import { IDistrict } from './district';
 
 
-
-export interface IState {
-    _id?: string;
-    name: string;
-    districtID: IDistrict[];
-}
 
 
 const stateSchema = new Schema({
