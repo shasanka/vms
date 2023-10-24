@@ -1,15 +1,22 @@
-import Image from "next/image";
+"use client";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
+import LogoutButton from "./LogoutButton";
+import {Siren} from 'lucide-react';
 
 export const TopBar = () => {
+  const { status } = useSession();
   return (
-    <nav className="flex min-h-screen flex-1 flex-col items-center bg-dark-1 px-6 pb-10 pt-28 max-md:pb-32 sm:px-10;">
-      <Link href={"/"} className="flex items-center gap-4">
-        <Image src={"/vercel.svg"} alt="logo" width={28} height={28} />
-        <p className="text-lg font-bold max-xs:hidden">Police</p>
-      </Link>
-      signout lbutton later add
+    <nav className=" bg-zinc-900 py-2 fixed inset-x-0 ">
+      <div className="flex justify-between mx-auto w-4/5">
+        <Link href={"/"} className="flex items-center gap-4">
+          <Siren color="white" />
+          <p className="invisible text-lg font-bold sm:visible text-white">Police</p>
+        </Link>
+        {status === "authenticated" && <LogoutButton />}
+      </div>
     </nav>
   );
 };
+

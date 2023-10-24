@@ -5,7 +5,7 @@ import React from "react";
 const LogoutButton = () => {
   return (
     <button
-      className="bg-red-600 text-white px-4 rounded-md py-2 mt-4"
+      className="bg-red-600 text-white px-4 rounded-md py-1 "
       onClick={() => signOut()}
     >
       Logout
