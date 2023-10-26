@@ -1,4 +1,5 @@
 import { UserPlus, Users } from "lucide-react";
+import Link from "next/link";
 import React, { ReactNode } from "react";
 const PrivateLayout = ({ children }: { children: ReactNode }) => {
   return (
@@ -10,22 +11,22 @@ const PrivateLayout = ({ children }: { children: ReactNode }) => {
         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
           <ul className="space-y-2 font-medium">
             <li>
-              <a
-                href="#"
+              <Link
+                href="/home"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <UserPlus />
                 <span className="ml-3">Add visitor</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
+              <Link
+                href="/visitors"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <Users />
                 <span className="ml-3">View visitors</span>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
