@@ -1,9 +1,10 @@
 "use client";
 import { DistrictType } from "@/app/api/auth/district/route";
 import { useVisitorFormHooks } from "@/hooks/useVisitorFormHooks";
-import { IVisitor } from "@/interface/common";
+import { IDProofType, IVisitor } from "@/interface/common";
+import { generateIOptsFromEnum } from "@/utils/common";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 const VisitorForm = () => {
   const {
@@ -20,16 +21,24 @@ const VisitorForm = () => {
     handleStateChange,
   } = useVisitorFormHooks();
 
+  const onSubmit: SubmitHandler<IVisitor> = (data) => console.log(data);
+
+  const idProofOptions = generateIOptsFromEnum(
+    IDProofType,
+    [],
+    [{ newStr: " ", oldStr: "_" }]
+  );
+
   return (
     // <form action={formHandler} onSubmit={handleSubmit}>
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-2 gap-2">
         <div className="grid grid-rows">
           <input
-            placeholder="Mobile Number"
+            placeholder="Phone Number"
             type="number"
             required
-            {...register("mobileno", {
+            {...register("phone_no", {
               minLength: {
                 value: 10,
                 message: "*Invalid",
@@ -40,17 +49,29 @@ const VisitorForm = () => {
               },
             })}
           />
-          {errors.mobileno && (
+          {errors.phone_no && (
             <span className="bg-red-600 text-sm h-5 mt-2 w-fit px-2 text-white rounded-md">
-              {errors.mobileno?.message}
+              {errors.phone_no?.message}
             </span>
           )}
         </div>
         <input
-          placeholder="Fullname"
+          placeholder="First name"
           type="text"
           required
-          {...register("name")}
+          {...register("first_name")}
+        />
+        <input
+          placeholder="Last name"
+          type="text"
+          required
+          {...register("last_name")}
+        />
+        <input
+          placeholder="Email"
+          type="text"
+          required
+          {...register("email")}
         />
         <input
           placeholder="Address"
@@ -87,18 +108,20 @@ const VisitorForm = () => {
             </option>
           ))}
         </select>
+        <select {...register("id_proof_type")} placeholder="ID proof type">
+          {idProofOptions.map((item, idx) => (
+            <option key={idx} value={item.value as number}>
+              {item.desc}
+            </option>
+          ))}
+        </select>
         <input
-          placeholder="Whom to meet?"
+          placeholder="ID proof number"
           type="text"
           required
-          {...register("tomeet")}
-        />{" "}
-        <input
-          placeholder="Department"
-          type="text"
-          required
-          {...register("department")}
+          {...register("id_proof_number")}
         />
+
         <button className="bg-green-600 hover:bg-green-700 rounded-md text-white py-2">
           Submit
         </button>

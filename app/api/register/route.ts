@@ -15,14 +15,6 @@ export async function POST(req: NextRequest) {
     if (oldUser) {
       return NextResponse.json({ error: 'Email already registered' }, { status: 409 })
     }
-
-    //const user = new User(req.query);
-    //await user.save();
-
-    // const oldUser = await User.findOne({ email });
-    // oldUser.mobile_no = 111;
-    // await oldUser.save();
-
     await User.create({
       name, email, password: hashedPassword
     })
