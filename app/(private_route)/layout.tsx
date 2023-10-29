@@ -15,17 +15,26 @@ const PrivateLayout = ({ children }: { children: ReactNode }) => {
                 href="/home"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
-                <UserPlus />
-                <span className="ml-3">Add visitor</span>
+                <Users />
+                <span className="ml-3">View visitors</span>
               </Link>
             </li>
             <li>
               <Link
-                href="/visitors"
+                href="/visitor"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <Users />
-                <span className="ml-3">View visitors</span>
+                <span className="ml-3">Add visitors</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/entry"
+                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              >
+                <UserPlus />
+                <span className="ml-3">Add Entry</span>
               </Link>
             </li>
           </ul>

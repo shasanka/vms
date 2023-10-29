@@ -2,8 +2,8 @@ import mongoose, { Schema, models } from 'mongoose';
 
 const entrySchema = new Schema({
     visitor_id: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId, // Use mongoose.Schema.Types.ObjectId
+        ref: 'Visitor' // Add the reference model name ('Visitor' in this case)
     },
     registration_timestamp: {
         type: Date,

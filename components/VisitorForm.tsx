@@ -21,7 +21,17 @@ const VisitorForm = () => {
     handleStateChange,
   } = useVisitorFormHooks();
 
-  const onSubmit: SubmitHandler<IVisitor> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<IVisitor> = async (data) => {
+    const visitorData = {
+      ...data,
+      id_proof_type: parseInt(data.id_proof_type),
+    };
+    const res = await fetch("api/register_visitor", {
+      method: "POST",
+      body: JSON.stringify(visitorData),
+    });
+    console.log(data);
+  };
 
   const idProofOptions = generateIOptsFromEnum(
     IDProofType,

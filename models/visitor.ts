@@ -1,54 +1,42 @@
-import mongoose, { Schema, models } from 'mongoose';
+import { IDProofType, IVisitor } from '@/interface/common'
+import mongoose, { Schema, models } from 'mongoose'
 
-const visitorSchema = new Schema({
+const visitorSchema = new Schema<IVisitor>({
+    phone_no: {
+        type: Number
+    },
     first_name: {
-        type: String,
-        required: true
+        type: String
     },
     last_name: {
-        type: String,
-        required: true
-    },
-    phone_no: {
-        type: String,
-        required: true
+        type: String
     },
     email: {
-        type: String,
-        required: true
+        type: String
     },
     address: {
-        type: String,
-        required: true
+        type: String
+    },
+    state: {
+        type: String
+    },
+    district: {
+        type: String
+    },
+    pincode: {
+        type: Number
     },
     id_proof_type: {
-        type: String,
-        required: true
+        type: Number,
+        enum: IDProofType,
+        default: IDProofType.DRIVING_LICENSE
     },
-    id_proof_no: {
-        type: String,
-        required: true
+    id_proof_number: {
+        type: String
     },
-    id_proof_copy: {
-        type: String,
-        required: true
-    },
-    created_at: {
-        type: Date,
-        default: Date.now,
-    },
-    updated_at: {
-        type: Date,
-    }
-
-})
-
-visitorSchema.pre('save', function (next) {
-	let entry = this;
-
-	entry.updated_at = new Date();
-	next();
-});
-
+}
+    , {
+        timestamps: true // If you set timestamps: true, Mongoose will add createdAt, updatedAt of type Date to your schema:
+    })
 const Visitor = models.Visitor || mongoose.model('Visitor', visitorSchema)
 export default Visitor
