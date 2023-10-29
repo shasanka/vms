@@ -1,5 +1,4 @@
 import { Document } from 'mongoose';
-import { ReactNode } from 'react'
 // interface IChildrenProps {
 //     children: ReactNode
 // }
@@ -14,20 +13,17 @@ export enum IDProofType {
     BIRTH_CERTIFICATE = 6
 }
 
-export interface IVisitor extends Document {
-    phone_no: number,
-    first_name: string,
-    last_name: string,
+export interface IVisitor {
+    phoneNo: number,
+    firstName: string,
+    lastName: string,
     email?: string,
     address: string,
     state: string,
     district: string,
     pincode: number,
-    id_proof_type: IDProofType,
-    id_proof_number: string,
-    // created_at: string,
-    // updated_at: string
-
+    idProofType: IDProofType,
+    idProofNumber: string,
 }
 
 export interface IOpt {

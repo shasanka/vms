@@ -2,13 +2,13 @@ import { IDProofType, IVisitor } from '@/interface/common'
 import mongoose, { Schema, models } from 'mongoose'
 
 const visitorSchema = new Schema<IVisitor>({
-    phone_no: {
+    phoneNo: {
         type: Number
     },
-    first_name: {
+    firstName: {
         type: String
     },
-    last_name: {
+    lastName: {
         type: String
     },
     email: {
@@ -26,12 +26,12 @@ const visitorSchema = new Schema<IVisitor>({
     pincode: {
         type: Number
     },
-    id_proof_type: {
+    idProofType: {
         type: Number,
         enum: IDProofType,
         default: IDProofType.DRIVING_LICENSE
     },
-    id_proof_number: {
+    idProofNumber: {
         type: String
     },
 }

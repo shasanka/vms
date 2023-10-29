@@ -22,15 +22,24 @@ const VisitorForm = () => {
   } = useVisitorFormHooks();
 
   const onSubmit: SubmitHandler<IVisitor> = async (data) => {
-    const visitorData = {
-      ...data,
-      id_proof_type: parseInt(data.id_proof_type),
-    };
     const res = await fetch("api/register_visitor", {
       method: "POST",
-      body: JSON.stringify(visitorData),
+      body: JSON.stringify(data),
     });
-    console.log(data);
+    console.log(
+      "🚀 ~ file: VisitorForm.tsx:29 ~ constonSubmit:SubmitHandler<IVisitor>= ~ res:",
+      res
+    );
+
+    if (res.ok) {
+      const response = await res.json();
+      console.log(
+        "🚀 ~ file: VisitorForm.tsx:38 ~ constonSubmit:SubmitHandler<IVisitor>= ~ response:",
+        response
+      );
+    } else {
+      console.log("pk");
+    }
   };
 
   const idProofOptions = generateIOptsFromEnum(
@@ -40,6 +49,7 @@ const VisitorForm = () => {
   );
 
   return (
+    // <h></h1>
     // <form action={formHandler} onSubmit={handleSubmit}>
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-2 gap-2">
@@ -48,7 +58,7 @@ const VisitorForm = () => {
             placeholder="Phone Number"
             type="number"
             required
-            {...register("phone_no", {
+            {...register("phoneNo", {
               minLength: {
                 value: 10,
                 message: "*Invalid",
@@ -59,9 +69,9 @@ const VisitorForm = () => {
               },
             })}
           />
-          {errors.phone_no && (
+          {errors.phoneNo && (
             <span className="bg-red-600 text-sm h-5 mt-2 w-fit px-2 text-white rounded-md">
-              {errors.phone_no?.message}
+              {errors.phoneNo?.message}
             </span>
           )}
         </div>
@@ -69,13 +79,13 @@ const VisitorForm = () => {
           placeholder="First name"
           type="text"
           required
-          {...register("first_name")}
+          {...register("firstName")}
         />
         <input
           placeholder="Last name"
           type="text"
           required
-          {...register("last_name")}
+          {...register("lastName")}
         />
         <input
           placeholder="Email"
@@ -118,7 +128,7 @@ const VisitorForm = () => {
             </option>
           ))}
         </select>
-        <select {...register("id_proof_type")} placeholder="ID proof type">
+        <select {...register("idProofType")} placeholder="ID proof type">
           {idProofOptions.map((item, idx) => (
             <option key={idx} value={item.value as number}>
               {item.desc}
@@ -129,7 +139,7 @@ const VisitorForm = () => {
           placeholder="ID proof number"
           type="text"
           required
-          {...register("id_proof_number")}
+          {...register("idProofNumber")}
         />
 
         <button className="bg-green-600 hover:bg-green-700 rounded-md text-white py-2">
