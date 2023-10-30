@@ -14,6 +14,7 @@ export enum IDProofType {
 }
 
 export interface IVisitor {
+    _id:string,
     phoneNo: number,
     firstName: string,
     lastName: string,

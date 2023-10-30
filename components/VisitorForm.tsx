@@ -22,21 +22,16 @@ const VisitorForm = () => {
   } = useVisitorFormHooks();
 
   const onSubmit: SubmitHandler<IVisitor> = async (data) => {
-    const res = await fetch("api/register_visitor", {
+    const res = await fetch("api/visitor", {
       method: "POST",
       body: JSON.stringify(data),
+      next:{tags:['visitors']}
+      
     });
-    console.log(
-      "🚀 ~ file: VisitorForm.tsx:29 ~ constonSubmit:SubmitHandler<IVisitor>= ~ res:",
-      res
-    );
 
     if (res.ok) {
       const response = await res.json();
-      console.log(
-        "🚀 ~ file: VisitorForm.tsx:38 ~ constonSubmit:SubmitHandler<IVisitor>= ~ response:",
-        response
-      );
+
     } else {
       console.log("pk");
     }

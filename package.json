@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nextui-org/react": "^2.1.13",
     "bcryptjs": "^2.4.3",
+    "framer-motion": "^10.16.4",
     "hybrid-crypto-js": "^0.2.4",
     "lucide-react": "^0.289.0",
     "mongoose": "^7.6.2",
