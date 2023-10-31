@@ -20,8 +20,8 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Provider>
-          {/* <TopBar /> */}
-          <div>{children}</div>
+          {/* <div>{children}</div> */}
+          {children}
         </Provider>
       </body>
     </html>

@@ -62,7 +62,7 @@ const SignIn = () => {
         </div>
       </nav>
       <div className="grid place-items-center h-screen">
-        <div className="shadow-lg p-5 rounded-lg border-t-4 border-green-400">
+        <div className="shadow-lg p-5 rounded-lg border-t-4 border-gray-400">
           <h1 className="text-xl font-bold my-4">Enter the details</h1>
           <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
             <input
@@ -81,7 +81,7 @@ const SignIn = () => {
               onChange={onChange}
               required
             />
-            <button className="bg-green-600 hover:bg-green-700 text-white font-bold cursor-pointer px-5 py-2 rounded-lg">
+            <button className="bg-gray-600 hover:bg-gray-700 text-white font-bold cursor-pointer px-5 py-2 rounded-lg">
               Login
             </button>
             {error && (

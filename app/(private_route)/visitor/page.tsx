@@ -1,5 +1,5 @@
 import React from "react";
-import { QRCodeSVG } from "qrcode.react";
+// import { QRCodeSVG } from "qrcode.react";
 import VisitorForm from "@/components/VisitorForm";
 const Visitor = () => {
   return (
