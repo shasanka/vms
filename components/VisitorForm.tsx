@@ -47,8 +47,7 @@ const VisitorForm = () => {
     // <h></h1>
     // <form action={formHandler} onSubmit={handleSubmit}>
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="grid grid-cols-2 gap-2">
-        <div className="grid grid-rows">
+      <div className="grid gap-1 lg:grid-cols-2 md:gap-2">
           <input
             placeholder="Phone Number"
             type="number"
@@ -69,7 +68,6 @@ const VisitorForm = () => {
               {errors.phoneNo?.message}
             </span>
           )}
-        </div>
         <input
           placeholder="First name"
           type="text"
@@ -137,7 +135,7 @@ const VisitorForm = () => {
           {...register("idProofNumber")}
         />
 
-        <button className="bg-green-600 hover:bg-green-700 rounded-md text-white py-2">
+        <button className="bg-gray-600 hover:bg-gray-700 rounded-md text-white py-2">
           Submit
         </button>
       </div>
