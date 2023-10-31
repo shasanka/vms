@@ -27,6 +27,30 @@ const VisitorsTable = ({ visitors }: IVisitorsTableProps) => {
       key: "lastName",
       label: "Last name",
     },
+    {
+      key: "email",
+      label: "Email",
+    },
+    {
+      key: "state",
+      label: "State",
+    },
+    {
+      key: "district",
+      label: "District",
+    },
+    {
+      key: "pincode",
+      label: "Pincode",
+    },
+    {
+      key: "idProofType",
+      label: "ID proof type",
+    },
+    {
+      key: "idProofNumber",
+      label: "ID proof number",
+    },
   ];
   return (
     <Table aria-label="Example table with dynamic content">
