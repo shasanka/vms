@@ -109,7 +109,7 @@ const VisitorForm = () => {
           onChange={handleDistrictChange}
         >
           {districts?.map((district: DistrictType, idx) => (
-            <option key={idx} value={district._id}>
+            <option key={idx} value={district.name}>
               {district.name}
             </option>
           ))}
