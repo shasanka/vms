@@ -5,10 +5,10 @@ const entrySchema = new Schema({
         type: mongoose.Schema.Types.ObjectId, // Use mongoose.Schema.Types.ObjectId
         ref: 'Visitor' // Add the reference model name ('Visitor' in this case)
     },
-    registration_timestamp: {
-        type: Date,
-        default: Date.now,
-    },
+    // registration_timestamp: {
+    //     type: Date,
+    //     default: Date.now,
+    // },
     checkin_timestamp: {
         type: Date,
     },
@@ -18,6 +18,8 @@ const entrySchema = new Schema({
     status: {
         type: String, // Registered, CheckedIn, CheckedOut
     }
+},{
+    timestamps:true
 })
 
 const Entry = models.Entry || mongoose.model('Entry', entrySchema)

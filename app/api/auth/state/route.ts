@@ -7,10 +7,11 @@ export async function GET() {
     try {
 
         await connectMongoDB()
-        const states = await StateModel.find({}, 'name');
-        const stateNames = states.map((state) => state.name);
+        // const states = await StateModel.find({}, 'name');
+        const allStates = await StateModel.find({}, 'name id');
+        // const stateNames = states.map((state) => state.name);
         // await saveStates()
-        return NextResponse.json({ data: stateNames }, { status: 200 });
+        return NextResponse.json({ data: allStates }, { status: 200 });
         // return NextResponse.json({ data: '' }, { status: 200 });
     } catch (e) {
         console.error(e)

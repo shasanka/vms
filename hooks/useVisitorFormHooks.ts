@@ -1,161 +1,164 @@
 // useFormHooks.ts
-import { DistrictType } from '@/app/api/auth/district/route';
-import { useState, useEffect } from 'react';
+import { DistrictType } from "@/app/api/auth/state/[stateId]/route";
+import { State } from "@/components/VisitorForm";
+import { useState, useEffect } from "react";
 interface IS {
-    data: string[]
+  data: State[];
 }
 
 interface ID {
-    data: {
-        _id: string,
-        name: string
-    }[]
+  data: {
+    _id: string;
+    name: string;
+  }[];
 }
 interface IP {
-    data: {
-        name: string;
-        pincodes: number[]
-    }
+  data: {
+    name: string;
+    pincodes: number[];
+  };
 }
 export function useVisitorFormHooks() {
-    const [states, setStates] = useState<string[]>([]);
-    const [districts, setDistricts] = useState<DistrictType[]>([]);
-    const [pincodes, setPincodes] = useState<number[]>([]);
+  const [states, setStates] = useState<State[]>([]);
+  const [districts, setDistricts] = useState<DistrictType[]>([]);
+  const [pincodes, setPincodes] = useState<number[]>([]);
 
-    useEffect(() => {
-        loadStatesData();
-    }, []);
+  useEffect(() => {
+    loadStatesData();
+  }, []);
 
+  async function loadStatesData() {
+    try {
+      const statesData = await getStates();
 
-    async function loadStatesData() {
-        try {
-            const statesData = await getStates();
+      if (!statesData?.data) {
+        console.error("Error fetching states data:", statesData);
+        setStates([]);
+        return; // Return early if there's no states data
+      }
 
-            if (!statesData) {
-                console.error('Error in getStates:', statesData);
-                return;
+      setStates(statesData.data);
+
+      //   const districtsData = await getDistricts({ state: statesData.data[0] });
+      if (statesData.data.length > 0) {
+        const firstState = statesData.data[0]._id;
+        const districtsData = await getDistricts(firstState);
+
+        if (!districtsData?.data) {
+          console.error("Error fetching districts data:", districtsData);
+          setDistricts([]);
+        } else {
+          setDistricts(districtsData.data);
+
+          if (districtsData.data.length > 0) {
+            const pincodesData = await getPincodes( districtsData.data[0]._id);
+
+            if (!pincodesData?.data || !pincodesData.data.pincodes) {
+              console.error("Error in getPincodes:", pincodesData);
+              return;
             }
 
-            const districtsData = await getDistricts({ state: statesData.data[0] });
-
-            if (!districtsData) {
-                console.error('Error in getDistricts:', districtsData);
-                return;
-            }
-
-            const pincodesData = await getPincodes({ districtID: districtsData.data[0]._id });
-
-            if (!pincodesData) {
-                console.error('Error in getPincodes:', pincodesData);
-                return;
-            }
-
-            setStates(statesData.data);
-            setDistricts(districtsData.data);
             setPincodes(pincodesData.data.pincodes);
-        } catch (error) {
-            console.error('Error in loadStatesData:', error);
+          }
         }
+      } else {
+        console.error("No states data to fetch districts.");
+        setDistricts([]);
+      }
+    } catch (error) {
+      console.error("Error in loadStatesData:", error);
+    }
+  }
+
+  async function handleStateChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    try {
+      const districtsData = await getDistricts(e.target.value);
+      if (districtsData) {
+        setDistricts(districtsData.data);
+        const pincodesData = await getPincodes( districtsData.data[0]._id);
+        if (pincodesData) {
+          setPincodes(pincodesData.data.pincodes);
+        }
+      } else {
+        console.error("Error in getDistricts:", districtsData);
+      }
+    } catch (error) {
+      // Handle other errors that might occur during the API call
+      console.error("Error in handleStateChange:", error);
     }
 
-    async function handleStateChange(e: React.ChangeEvent<HTMLSelectElement>) {
-        const params = {
-            state: e.target.value
-        }
-        try {
-            const districtsData = await getDistricts(params);
-            if (districtsData) {
-                setDistricts(districtsData.data);
-                const pincodesData = await getPincodes({
-                    districtID: districtsData.data[0]._id
-                })
-                if (pincodesData) {
-                    setPincodes(pincodesData.data.pincodes)
-                }
-            } else {
-                console.error('Error in getDistricts:', districtsData);
-            }
-        } catch (error) {
-            // Handle other errors that might occur during the API call
-            console.error('Error in handleStateChange:', error);
-        }
+    // Load pincodes for the default district here
+  }
 
-        // Load pincodes for the default district here
+  async function handleDistrictChange(e: React.ChangeEvent<HTMLSelectElement>) {
+
+    try {
+      const pincodesData = await getPincodes(e.target.value);
+      if (pincodesData) {
+        setPincodes(pincodesData.data.pincodes);
+      } else {
+        console.error();
+      }
+    } catch (error) {
+      console.error("Error in handleDistrictChange:", error);
     }
+  }
 
-    async function handleDistrictChange(e: React.ChangeEvent<HTMLSelectElement>) {
-        const param = {
-            districtID: e.target.value
-        }
-        try {
-            const pincodesData = await getPincodes(param);
-            if (pincodesData) {
-                setPincodes(pincodesData.data.pincodes);
-            } else {
-                console.error()
-            }
-        } catch (error) {
-            console.error('Error in handleDistrictChange:', error);
-        }
-    }
-
-    return {
-        states,
-        districts,
-        pincodes,
-        handleStateChange,
-        handleDistrictChange,
-    };
+  return {
+    states,
+    districts,
+    pincodes,
+    handleStateChange,
+    handleDistrictChange,
+  };
 }
 
-
 const getStates = async (): Promise<IS | null> => {
-    try {
+  try {
+    const res = await fetch("api/auth/state");
 
-        const res = await fetch("api/auth/state");
-
-        if (res.ok) {
-            return await res.json();
-
-        }
-        else {
-            return null
-        }
-    } catch (E) {
-        return null
+    if (res.ok) {
+      const state = await res.json();
+      return state;
+    } else {
+      return null;
     }
+  } catch (E) {
+    return null;
+  }
 };
 
-const getDistricts = async (param: { state: string }): Promise<ID | null> => {
-    const searchParams = new URLSearchParams(param).toString();
-    const url = `/api/auth/district?${searchParams}`;
-    try {
-        const res = await fetch(url, {
-            method: "GET",
-        });
-        if (res.ok) {
-            return await res.json();
-        } else {
-            return null
-        }
-    } catch (E) {
-        return null
+const getDistricts = async (state: string): Promise<ID | null> => {
+  const url = `/api/auth/state/${state}`;
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+    });
+    if (res.ok) {
+      const state = await res.json();
+      return state;
+    } else {
+      return null;
     }
+  } catch (E) {
+    return null;
+  }
 };
 
+const getPincodes = async (districtId: string): Promise<IP | null> => {
+  const url = `/api/auth/district/${districtId}`;
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+    });
 
-const getPincodes = async (param: { districtID: string }): Promise<IP | null> => {
-    const searchParams = new URLSearchParams(param).toString();
-    const url = `/api/auth/pincode?${searchParams}`;
-    try {
-        const res = await fetch(url, {
-            method: "GET",
-        });
+    if (res.ok) {
 
-        if (res.ok) return await res.json()
-        return null
-    } catch (E) {
-        return null
+      const pincodes =  await res.json();
+      return pincodes
     }
+    return null;
+  } catch (E) {
+    return null;
+  }
 };
-

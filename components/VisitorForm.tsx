@@ -1,10 +1,15 @@
 "use client";
-import { DistrictType } from "@/app/api/auth/district/route";
+import { DistrictType } from "@/app/api/auth/state/[stateId]/route";
 import { useVisitorFormHooks } from "@/hooks/useVisitorFormHooks";
 import { IDProofType, IVisitor } from "@/interface/common";
 import { generateIOptsFromEnum } from "@/utils/common";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+
+export interface State{
+  _id:string;
+  name:string
+}
 
 const VisitorForm = () => {
   const {
@@ -97,9 +102,9 @@ const VisitorForm = () => {
           {...register("state")}
           onChange={handleStateChange}
         >
-          {states.map((state, idx) => (
-            <option key={idx} value={state} defaultValue={"ASSAM"}>
-              {state}
+          {states.map((state:State, idx) => (
+            <option key={idx} value={state._id} >
+              {state.name}
             </option>
           ))}
         </select>
@@ -109,7 +114,7 @@ const VisitorForm = () => {
           onChange={handleDistrictChange}
         >
           {districts?.map((district: DistrictType, idx) => (
-            <option key={idx} value={district.name}>
+            <option key={idx} value={district._id}>
               {district.name}
             </option>
           ))}

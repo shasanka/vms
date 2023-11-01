@@ -26,7 +26,7 @@ const PrivateLayout = ({ children }: { children: ReactNode }) => {
                   alt="FlowBite Logo"
                 />
                 <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
-                  Assam Police
+                  {/* Assam Police */}
                 </span>
               </Link>
             </div>
