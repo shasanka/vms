@@ -42,7 +42,32 @@ const Entry = () => {
   };
 
   useEffect(() => {
-    if (watcher) console.log(watcher);
+    if (!watcher) return;
+
+    let debounceTimer;
+
+    const fetchData = async () => {
+      // Make your API call here
+      // For example: const response = await fetch('your-api-url');
+      // Process the response
+    };
+
+    // Create a debounced version of the fetchData function
+    // Function to trigger the API call with debounce
+    const debouncedFetchData = () => {
+      clearTimeout(debounceTimer); // Clear any existing timer
+      debounceTimer = setTimeout(fetchData, 500); // Adjust the debounce delay as needed
+    };
+
+    // Call the debounced function when watcher changes
+    if (watcher) {
+      debouncedFetchData();
+    }
+
+    return () => {
+      // Clear the debounce timer when the component unmounts
+      clearTimeout(debounceTimer);
+    };
   }, [watcher]);
 
   return (
