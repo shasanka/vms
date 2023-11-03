@@ -1,5 +1,5 @@
 "use client";
-import { DistrictType } from "@/app/api/auth/state/[stateId]/route";
+import { DistrictType } from "@/app/api/auth/state/[stateName]/route";
 import { useVisitorFormHooks } from "@/hooks/useVisitorFormHooks";
 import { IDProofType, IVisitor } from "@/interface/common";
 import { generateIOptsFromEnum } from "@/utils/common";
@@ -103,7 +103,7 @@ const VisitorForm = () => {
           onChange={handleStateChange}
         >
           {states.map((state:State, idx) => (
-            <option key={idx} value={state._id} >
+            <option key={idx} value={state.name} >
               {state.name}
             </option>
           ))}
@@ -114,7 +114,7 @@ const VisitorForm = () => {
           onChange={handleDistrictChange}
         >
           {districts?.map((district: DistrictType, idx) => (
-            <option key={idx} value={district._id}>
+            <option key={idx} value={district.name}>
               {district.name}
             </option>
           ))}

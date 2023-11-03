@@ -1,26 +1,34 @@
-import mongoose, { Schema, models } from 'mongoose';
+import { EEntryStatus, IEntry } from "@/interface/common";
+import mongoose, { Schema, models } from "mongoose";
 
-const entrySchema = new Schema({
-    visitor_id: {
-        type: mongoose.Schema.Types.ObjectId, // Use mongoose.Schema.Types.ObjectId
-        ref: 'Visitor' // Add the reference model name ('Visitor' in this case)
-    },
-    // registration_timestamp: {
-    //     type: Date,
-    //     default: Date.now,
-    // },
-    checkin_timestamp: {
-        type: Date,
-    },
-    checkout_timestamp: {
-        type: Date,
-    },
-    status: {
-        type: String, // Registered, CheckedIn, CheckedOut
-    }
-},{
-    timestamps:true
-})
+const entrySchemaFields: Record<keyof IEntry, any> = {
+  visitorId: {
+    type: mongoose.Schema.Types.ObjectId, // Explicitly specify the type
+    ref: "Visitor", // Add the reference model name ('Visitor' in this case)
+  },
+  registrationTimestamp: {
+    type: Date,
+    default: Date.now,
+    immutable: true,
+  },
+  checkinTimestamp: {
+    type: Date,
+  },
+  checkoutTimestamp: {
+    type: Date,
+  },
+  status: {
+    type: Number, // Registered, CheckedIn, CheckedOut
+    enum: EEntryStatus,
+    default: 1,
+  },
+};
+const entrySchema = new Schema(
+  entrySchemaFields,
+  {
+    timestamps: true,
+  }
+);
 
-const Entry = models.Entry || mongoose.model('Entry', entrySchema)
-export default Entry
+const Entry = models.Entry || mongoose.model("Entry", entrySchema);
+export default Entry;

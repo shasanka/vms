@@ -15,15 +15,15 @@ export type StateType = {
 };
 export async function GET(
   req: NextRequest,
-  { params }: { params: { stateId: string } }
+  { params }: { params: { stateName: string } }
 ) {
-  const state = params.stateId; // 'a', 'b', or 'c'
+  const state = params.stateName; // 'a', 'b', or 'c'
 
   try {
     await connectMongoDB();
 
     const stateDocument = await StateModel.findOne({
-      _id: state,
+      name: state,
     });
     if (!stateDocument) {
       return NextResponse.json({ data: "State not found" }, { status: 404 });

@@ -1,5 +1,5 @@
 // useFormHooks.ts
-import { DistrictType } from "@/app/api/auth/state/[stateId]/route";
+import { DistrictType } from "@/app/api/auth/state/[stateName]/route";
 import { State } from "@/components/VisitorForm";
 import { useState, useEffect } from "react";
 interface IS {
@@ -41,7 +41,7 @@ export function useVisitorFormHooks() {
 
       //   const districtsData = await getDistricts({ state: statesData.data[0] });
       if (statesData.data.length > 0) {
-        const firstState = statesData.data[0]._id;
+        const firstState = statesData.data[0].name;
         const districtsData = await getDistricts(firstState);
 
         if (!districtsData?.data) {
@@ -51,13 +51,12 @@ export function useVisitorFormHooks() {
           setDistricts(districtsData.data);
 
           if (districtsData.data.length > 0) {
-            const pincodesData = await getPincodes( districtsData.data[0]._id);
-
+            const pincodesData = await getPincodes( districtsData.data[0].name);
+            
             if (!pincodesData?.data || !pincodesData.data.pincodes) {
               console.error("Error in getPincodes:", pincodesData);
               return;
             }
-
             setPincodes(pincodesData.data.pincodes);
           }
         }
@@ -75,7 +74,7 @@ export function useVisitorFormHooks() {
       const districtsData = await getDistricts(e.target.value);
       if (districtsData) {
         setDistricts(districtsData.data);
-        const pincodesData = await getPincodes( districtsData.data[0]._id);
+        const pincodesData = await getPincodes( districtsData.data[0].name);
         if (pincodesData) {
           setPincodes(pincodesData.data.pincodes);
         }
@@ -145,8 +144,8 @@ const getDistricts = async (state: string): Promise<ID | null> => {
   }
 };
 
-const getPincodes = async (districtId: string): Promise<IP | null> => {
-  const url = `/api/auth/district/${districtId}`;
+const getPincodes = async (districtName: string): Promise<IP | null> => {
+  const url = `/api/auth/district/${districtName}`;
   try {
     const res = await fetch(url, {
       method: "GET",
