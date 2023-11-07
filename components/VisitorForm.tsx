@@ -3,6 +3,7 @@ import { DistrictType } from "@/app/api/auth/state/[stateName]/route";
 import { useVisitorFormHooks } from "@/hooks/useVisitorFormHooks";
 import { IDProofType, IVisitor } from "@/interface/common";
 import { generateIOptsFromEnum } from "@/utils/common";
+import { revalidatePath } from "next/cache";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -30,9 +31,10 @@ const VisitorForm = () => {
     const res = await fetch("api/visitor", {
       method: "POST",
       body: JSON.stringify(data),
-      next:{tags:['visitors']}
+      cache:'no-cache',
       
     });
+    // revalidatePath('home')
 
     if (res.ok) {
       const response = await res.json();
@@ -46,8 +48,9 @@ const VisitorForm = () => {
     IDProofType,
     [],
     [{ newStr: " ", oldStr: "_" }]
-  );
+  )
 
+  console.log('ehui');
   return (
     // <h></h1>
     // <form action={formHandler} onSubmit={handleSubmit}>

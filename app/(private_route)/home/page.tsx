@@ -2,9 +2,10 @@ import VisitorsTable from "@/components/VisitorsTable";
 import { IVisitor } from "@/interface/common";
 import { connectMongoDB } from "@/lib/mongodb";
 import Visitor from "@/models/visitor";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 async function getData() {
+  console.log('get data')
   try {
     await connectMongoDB();
     const visitors: IVisitor[] = await Visitor.find();
@@ -18,7 +19,7 @@ async function getData() {
 }
 
 export default async function Home() {
-  revalidateTag('visitors')
+
   const res = await getData();
   const jsonRes = await res.json();
   const visitors:IVisitor[] = jsonRes.data;
