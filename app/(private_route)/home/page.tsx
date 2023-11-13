@@ -4,8 +4,9 @@ import { getServerSession } from "next-auth";
 
 async function getData() {
   const session = await getServerSession(authOptions);
+  console.log("🚀 ~ file: page.tsx:7 ~ getData ~ session:", session)
   try {
-    const res = await fetch("http://127.0.0.1:3001/api/v1/visitor", {
+    const res = await fetch(`${process.env.NEXT_BACKEND_URL}/api/v1/visitor`, {
       headers: new Headers({
         Authorization: `Bearer ${session?.user.accessToken}`,
         "Content-Type": "application/json",
@@ -28,7 +29,7 @@ export default async function Home() {
   const res = await getData();
   return (
     <>
-      {res ? (
+      {res.data ? (
         <VisitorsTable visitors={res.data} />
       ) : (
         <p>Loading or no data available.</p>

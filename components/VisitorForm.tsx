@@ -3,16 +3,18 @@ import { DistrictType } from "@/app/api/auth/state/[stateName]/route";
 import { useVisitorFormHooks } from "@/hooks/useVisitorFormHooks";
 import { IDProofType, IVisitor } from "@/interface/common";
 import { generateIOptsFromEnum } from "@/utils/common";
+import { useSession } from "next-auth/react";
 import { revalidatePath } from "next/cache";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-export interface State{
-  _id:string;
-  name:string
+export interface State {
+  _id: string;
+  name: string;
 }
 
 const VisitorForm = () => {
+  const { data: session } = useSession();
   const {
     register,
     handleSubmit,
@@ -28,19 +30,45 @@ const VisitorForm = () => {
   } = useVisitorFormHooks();
 
   const onSubmit: SubmitHandler<IVisitor> = async (data) => {
-    const res = await fetch("api/visitor", {
+    console.log(
+      "🚀 ~ file: VisitorForm.tsx:31 ~ constonSubmit:SubmitHandler<IVisitor>= ~ data:",
+      data
+    );
+
+    const visitor: IVisitor = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      phoneNumber: Number(data.phoneNumber),
+      email: data.email,
+      address: data.address,
+      state: data.state,
+      district: data.district,
+      pincode: Number(data.pincode),
+      idProofType: Number(data.idProofType),
+      idProofNumber: data.idProofNumber,
+    };
+    const res = await fetch(`http://127.0.0.1:3001/api/v1/visitor`, {
       method: "POST",
-      body: JSON.stringify(data),
-      cache:'no-cache',
-      
+      body: JSON.stringify(visitor),
+      cache: "no-cache",
+      headers: new Headers({
+        Authorization: `Bearer ${session?.user.accessToken}`,
+        "Content-Type": "application/json",
+      }),
     });
-    // revalidatePath('home')
 
     if (res.ok) {
       const response = await res.json();
-
+      console.log(
+        "🚀 ~ file: VisitorForm.tsx:39 ~ constonSubmit:SubmitHandler<IVisitor>= ~ response:",
+        response
+      );
     } else {
-      console.log("pk");
+      const r = await res.json();
+      console.log(
+        "🚀 ~ file: VisitorForm.tsx:62 ~ constonSubmit:SubmitHandler<IVisitor>= ~ r:",
+        res
+      );
     }
   };
 
@@ -48,34 +76,31 @@ const VisitorForm = () => {
     IDProofType,
     [],
     [{ newStr: " ", oldStr: "_" }]
-  )
+  );
 
-  console.log('ehui');
   return (
-    // <h></h1>
-    // <form action={formHandler} onSubmit={handleSubmit}>
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="grid gap-1 lg:grid-cols-2 md:gap-2">
-          <input
-            placeholder="Phone Number"
-            type="number"
-            required
-            {...register("phoneNo", {
-              minLength: {
-                value: 10,
-                message: "*Invalid",
-              },
-              maxLength: {
-                value: 10,
-                message: "*Invalid",
-              },
-            })}
-          />
-          {errors.phoneNo && (
-            <span className="bg-red-600 text-sm h-5 mt-2 w-fit px-2 text-white rounded-md">
-              {errors.phoneNo?.message}
-            </span>
-          )}
+        <input
+          placeholder="Phone Number"
+          type="number"
+          required
+          {...register("phoneNumber", {
+            minLength: {
+              value: 10,
+              message: "*Invalid",
+            },
+            maxLength: {
+              value: 10,
+              message: "*Invalid",
+            },
+          })}
+        />
+        {errors.phoneNumber && (
+          <span className="bg-red-600 text-sm h-5 mt-2 w-fit px-2 text-white rounded-md">
+            {errors.phoneNumber?.message}
+          </span>
+        )}
         <input
           placeholder="First name"
           type="text"
@@ -105,8 +130,8 @@ const VisitorForm = () => {
           {...register("state")}
           onChange={handleStateChange}
         >
-          {states.map((state:State, idx) => (
-            <option key={idx} value={state.name} >
+          {states.map((state: State, idx) => (
+            <option key={idx} value={state.name}>
               {state.name}
             </option>
           ))}
@@ -143,7 +168,7 @@ const VisitorForm = () => {
           {...register("idProofNumber")}
         />
 
-        <button className="bg-gray-600 hover:bg-gray-700 rounded-md text-white py-2">
+        <button className="bg-gray-600 hover:bg-gray-700 rounded-md text-white py-2" type="submit">
           Submit
         </button>
       </div>

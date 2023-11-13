@@ -66,7 +66,6 @@ export const authOptions: AuthOptions = {
     },
     session({ session, token, user }) {
       session.user = token as any;
-      console.log("🚀 ~ file: route.ts:69 ~ session ~ session:", session)
       return session;
     },
   },

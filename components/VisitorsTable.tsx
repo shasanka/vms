@@ -18,7 +18,7 @@ interface IVisitorsTableProps {
 const VisitorsTable = ({ visitors }: IVisitorsTableProps) => {
   const columns = [
     {
-      key: "phoneNo",
+      key: "phoneNumber",
       label: "Phone no",
     },
     {
