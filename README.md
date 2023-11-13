@@ -12,7 +12,7 @@ Then add this:
 ```bash
 MONGODB_CONNECT_URI=mongodb://localhost:27017/vms
 NEXTAUTH_SECRET=<some kind of string>
-NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_URL=http://localhost:8080
 
 ```
 

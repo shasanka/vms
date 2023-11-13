@@ -4,5 +4,4 @@ export default async function Page() {
   const session = await getServerSession();
   if (!session?.user) redirect("/auth/sigin");
   else redirect("/home");
-  // return <Home/>
 }

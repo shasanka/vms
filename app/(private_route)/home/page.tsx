@@ -2,10 +2,9 @@ import VisitorsTable from "@/components/VisitorsTable";
 import { IVisitor } from "@/interface/common";
 import { connectMongoDB } from "@/lib/mongodb";
 import Visitor from "@/models/visitor";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 async function getData() {
-  console.log('get data')
   try {
     await connectMongoDB();
     const visitors: IVisitor[] = await Visitor.find();
@@ -19,7 +18,8 @@ async function getData() {
 }
 
 export default async function Home() {
-
+const session = await getServerSession()
+  console.log("🚀 ~ file: page.tsx:22 ~ Home ~ session:", session)
   const res = await getData();
   const jsonRes = await res.json();
   const visitors:IVisitor[] = jsonRes.data;

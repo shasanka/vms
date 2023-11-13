@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { IVisitor } from "@/interface/common";
 import {
   Table,
@@ -9,6 +9,8 @@ import {
   TableCell,
   getKeyValue,
 } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
+import { MouseEventHandler } from "react";
 
 interface IVisitorsTableProps {
   visitors: IVisitor[];
@@ -52,8 +54,15 @@ const VisitorsTable = ({ visitors }: IVisitorsTableProps) => {
       label: "ID proof number",
     },
   ];
+
+const router= useRouter()
   return (
-    <Table aria-label="Example table with dynamic content">
+    <Table
+      aria-label="Example table with dynamic content"
+      selectionMode="single"
+      selectionBehavior="replace"
+      onRowAction={(key) => router.push(`home/${key}`)}
+    >
       <TableHeader columns={columns}>
         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
