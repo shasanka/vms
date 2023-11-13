@@ -4,20 +4,25 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export interface IUser {
-  name: string;
+  username: string;
   email: string;
   password: string;
+  role: string;
 }
 const RegisterForm = () => {
   const router = useRouter();
   const [user, setUser] = useState<IUser>({
-    name: "",
+    username: "",
     email: "",
     password: "",
+    role: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    console.log("🚀 ~ file: RegisterForm.tsx:24 ~ RegisterForm ~ e:", e.target)
+    e.persist(); // Use e.persist() instead of e.preventDefault()
     setUser((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
@@ -27,13 +32,13 @@ const RegisterForm = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { email, name, password } = user;
-    if (!name || !email || !password) {
+    const { email, username, password } = user;
+    if (!username || !email || !password) {
       setError("*All fields are required");
     }
 
     try {
-      const res = await fetch("api/register", {
+      const res = await fetch("http://127.0.0.1:3001/api/v1/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -77,9 +82,9 @@ const RegisterForm = () => {
           <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
             <input
               type="text"
-              placeholder="Full Name"
-              name="name"
-              value={user.name}
+              placeholder="Username"
+              name="username"
+              value={user.username}
               onChange={handleChange}
             />
             <input
@@ -96,6 +101,17 @@ const RegisterForm = () => {
               value={user.password}
               onChange={handleChange}
             />
+            <select
+              placeholder="State"
+              name="role"
+              value={user.role}
+              onChange={handleChange}
+            >
+              <option value="">Select Role</option>
+              <option value={"user"}>User</option>
+              <option value={"admin"}>Admin</option>
+              <option value={"moderator"}>Moderator</option>
+            </select>
             <button
               type="submit"
               className="bg-gray-600 text-white font-bold cursor-pointer px-5 py-2 rounded-lg hover:bg-gray-700 "

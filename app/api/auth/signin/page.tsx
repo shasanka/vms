@@ -31,7 +31,6 @@ const SignIn = () => {
         password: user.password,
         redirect: false,
       });
-      console.log("🚀 ~ file: page.tsx:34 ~ handleSubmit ~ res:", res);
 
       if (res?.error) {
         return setError("Invalid credentials");

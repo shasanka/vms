@@ -9,7 +9,7 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 export interface State {
-  _id: string;
+  id: string;
   name: string;
 }
 
@@ -23,18 +23,13 @@ const VisitorForm = () => {
 
   const {
     districts,
-    pincodes,
+    // pincodes,
     states,
     handleDistrictChange,
     handleStateChange,
   } = useVisitorFormHooks();
 
   const onSubmit: SubmitHandler<IVisitor> = async (data) => {
-    console.log(
-      "🚀 ~ file: VisitorForm.tsx:31 ~ constonSubmit:SubmitHandler<IVisitor>= ~ data:",
-      data
-    );
-
     const visitor: IVisitor = {
       firstName: data.firstName,
       lastName: data.lastName,
@@ -59,16 +54,8 @@ const VisitorForm = () => {
 
     if (res.ok) {
       const response = await res.json();
-      console.log(
-        "🚀 ~ file: VisitorForm.tsx:39 ~ constonSubmit:SubmitHandler<IVisitor>= ~ response:",
-        response
-      );
     } else {
       const r = await res.json();
-      console.log(
-        "🚀 ~ file: VisitorForm.tsx:62 ~ constonSubmit:SubmitHandler<IVisitor>= ~ r:",
-        res
-      );
     }
   };
 
@@ -131,7 +118,7 @@ const VisitorForm = () => {
           onChange={handleStateChange}
         >
           {states.map((state: State, idx) => (
-            <option key={idx} value={state.name}>
+            <option key={idx} value={state.id}>
               {state.name}
             </option>
           ))}
@@ -147,13 +134,13 @@ const VisitorForm = () => {
             </option>
           ))}
         </select>
-        <select {...register("pincode")} placeholder="Pincode">
+        {/* <select {...register("pincode")} placeholder="Pincode">
           {pincodes?.map((pincode) => (
             <option key={pincode} value={pincode}>
               {pincode}
             </option>
           ))}
-        </select>
+        </select> */}
         <select {...register("idProofType")} placeholder="ID proof type">
           {idProofOptions.map((item, idx) => (
             <option key={idx} value={item.value as number}>

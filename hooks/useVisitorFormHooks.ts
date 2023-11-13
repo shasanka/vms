@@ -1,35 +1,36 @@
-// useFormHooks.ts
 import { DistrictType } from "@/app/api/auth/state/[stateName]/route";
 import { State } from "@/components/VisitorForm";
+import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 interface IS {
   data: State[];
 }
 
-interface ID {
-  data: {
-    _id: string;
-    name: string;
-  }[];
-}
-interface IP {
-  data: {
-    name: string;
-    pincodes: number[];
-  };
-}
+// interface ID {
+//   data: {
+//     id: string;
+//     name: string;
+//   }[];
+// }
+// interface IP {
+//   data: {
+//     name: string;
+//     pincodes: number[];
+//   };
+// }
 export function useVisitorFormHooks() {
+  const { data: session } = useSession();
   const [states, setStates] = useState<State[]>([]);
-  const [districts, setDistricts] = useState<DistrictType[]>([]);
-  const [pincodes, setPincodes] = useState<number[]>([]);
+  const [districts, setDistricts] = useState<[]>([]);
 
   useEffect(() => {
     loadStatesData();
-  }, []);
+  }, [session]);
 
   async function loadStatesData() {
     try {
       const statesData = await getStates();
+      console.log("🚀 ~ file: useVisitorFormHooks.ts:33 ~ loadStatesData ~ statesData:", statesData)
 
       if (!statesData?.data) {
         console.error("Error fetching states data:", statesData);
@@ -41,24 +42,24 @@ export function useVisitorFormHooks() {
 
       //   const districtsData = await getDistricts({ state: statesData.data[0] });
       if (statesData.data.length > 0) {
-        const firstState = statesData.data[0].name;
+        const firstState = statesData.data[0].id;
         const districtsData = await getDistricts(firstState);
+        console.log("🚀 ~ file: useVisitorFormHooks.ts:47 ~ loadStatesData ~ districtsData:", districtsData)
 
         if (!districtsData?.data) {
-          console.error("Error fetching districts data:", districtsData);
           setDistricts([]);
         } else {
-          setDistricts(districtsData.data);
+          setDistricts(districtsData.data.districts);
 
-          if (districtsData.data.length > 0) {
-            const pincodesData = await getPincodes( districtsData.data[0].name);
-            
-            if (!pincodesData?.data || !pincodesData.data.pincodes) {
-              console.error("Error in getPincodes:", pincodesData);
-              return;
-            }
-            setPincodes(pincodesData.data.pincodes);
-          }
+          // if (districtsData.data.length > 0) {
+          //   const pincodesData = await getPincodes(districtsData.data[0].name);
+
+          //   if (!pincodesData?.data || !pincodesData.data.pincodes) {
+          //     console.error("Error in getPincodes:", pincodesData);
+          //     return;
+          //   }
+          //   setPincodes(pincodesData.data.pincodes);
+          // }
         }
       } else {
         console.error("No states data to fetch districts.");
@@ -73,11 +74,11 @@ export function useVisitorFormHooks() {
     try {
       const districtsData = await getDistricts(e.target.value);
       if (districtsData) {
-        setDistricts(districtsData.data);
-        const pincodesData = await getPincodes( districtsData.data[0].name);
-        if (pincodesData) {
-          setPincodes(pincodesData.data.pincodes);
-        }
+        setDistricts(districtsData.data.districts);
+        // const pincodesData = await getPincodes(districtsData.data[0].name);
+        // if (pincodesData) {
+        //   setPincodes(pincodesData.data.pincodes);
+        // }
       } else {
         console.error("Error in getDistricts:", districtsData);
       }
@@ -90,74 +91,84 @@ export function useVisitorFormHooks() {
   }
 
   async function handleDistrictChange(e: React.ChangeEvent<HTMLSelectElement>) {
-
-    try {
-      const pincodesData = await getPincodes(e.target.value);
-      if (pincodesData) {
-        setPincodes(pincodesData.data.pincodes);
-      } else {
-        console.error();
-      }
-    } catch (error) {
-      console.error("Error in handleDistrictChange:", error);
-    }
+    // try {
+    //   const pincodesData = await getPincodes(e.target.value);
+    //   if (pincodesData) {
+    //     setPincodes(pincodesData.data.pincodes);
+    //   } else {
+    //     console.error();
+    //   }
+    // } catch (error) {
+    //   console.error("Error in handleDistrictChange:", error);
+    // }
   }
+
+  const getStates = async (): Promise<IS | null> => {
+    try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/state`, {
+        method:'GET',
+        headers: new Headers({
+          Authorization: `Bearer ${session?.user.accessToken}`,
+          "Content-Type": "application/json",
+        }),
+      });
+
+      if (res.ok) {
+        const state = await res.json();
+        return state;
+      } else {
+        return null;
+      }
+    } catch (E) {
+      return null;
+    }
+  };
+
+  const getDistricts = async (state: string) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/state/${state}`,
+        {
+          method: "GET",
+          headers: new Headers({
+            Authorization: `Bearer ${session?.user.accessToken}`,
+            "Content-Type": "application/json",
+          }),
+        }
+      );
+      if (res.ok) {
+        const state = await res.json();
+        return state;
+      } else {
+        return null;
+      }
+    } catch (E) {
+      return null;
+    }
+  };
+
+  // const getPincodes = async (districtName: string): Promise<IP | null> => {
+  //   const url = `/api/auth/district/${districtName}`;
+  //   try {
+  //     const res = await fetch(url, {
+  //       method: "GET",
+  //     });
+
+  //     if (res.ok) {
+  //       const pincodes = await res.json();
+  //       return pincodes;
+  //     }
+  //     return null;
+  //   } catch (E) {
+  //     return null;
+  //   }
+  // };
 
   return {
     states,
     districts,
-    pincodes,
+    // pincodes,
     handleStateChange,
     handleDistrictChange,
   };
 }
-
-const getStates = async (): Promise<IS | null> => {
-  try {
-    const res = await fetch("api/auth/state");
-
-    if (res.ok) {
-      const state = await res.json();
-      return state;
-    } else {
-      return null;
-    }
-  } catch (E) {
-    return null;
-  }
-};
-
-const getDistricts = async (state: string): Promise<ID | null> => {
-  const url = `/api/auth/state/${state}`;
-  try {
-    const res = await fetch(url, {
-      method: "GET",
-    });
-    if (res.ok) {
-      const state = await res.json();
-      return state;
-    } else {
-      return null;
-    }
-  } catch (E) {
-    return null;
-  }
-};
-
-const getPincodes = async (districtName: string): Promise<IP | null> => {
-  const url = `/api/auth/district/${districtName}`;
-  try {
-    const res = await fetch(url, {
-      method: "GET",
-    });
-
-    if (res.ok) {
-
-      const pincodes =  await res.json();
-      return pincodes
-    }
-    return null;
-  } catch (E) {
-    return null;
-  }
-};

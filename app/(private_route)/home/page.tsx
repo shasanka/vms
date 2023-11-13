@@ -27,6 +27,7 @@ async function getData() {
 
 export default async function Home() {
   const res = await getData();
+  console.log("🚀 ~ file: page.tsx:30 ~ Home ~ res:", res)
   return (
     <>
       {res.data ? (
