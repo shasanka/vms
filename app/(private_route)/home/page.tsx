@@ -1,31 +1,38 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import VisitorsTable from "@/components/VisitorsTable";
-import { IVisitor } from "@/interface/common";
-import { connectMongoDB } from "@/lib/mongodb";
-import Visitor from "@/models/visitor";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+
 async function getData() {
+  const session = await getServerSession(authOptions);
   try {
-    await connectMongoDB();
-    const visitors: IVisitor[] = await Visitor.find();
-    return NextResponse.json(
-      { message: "All users", data: visitors },
-      { status: 200 }
-    );
-  } catch (E: any) {
-    return NextResponse.json({ message: E.message }, { status: 500 });
+    const res = await fetch("http://127.0.0.1:3001/api/v1/visitor", {
+      headers: new Headers({
+        Authorization: `Bearer ${session?.user.accessToken}`,
+        "Content-Type": "application/json",
+      }),
+    });
+
+    if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      console.log(await res.json());
+      throw new Error("Failed to fetch data");
+    }
+    const visitors = await res.json();
+    return visitors;
+  } catch (error) {
+    return error;
   }
 }
 
 export default async function Home() {
-const session = await getServerSession()
-  console.log("🚀 ~ file: page.tsx:22 ~ Home ~ session:", session)
   const res = await getData();
-  const jsonRes = await res.json();
-  const visitors:IVisitor[] = jsonRes.data;
   return (
     <>
-      <VisitorsTable visitors={visitors}/>
+      {res ? (
+        <VisitorsTable visitors={res.data} />
+      ) : (
+        <p>Loading or no data available.</p>
+      )}
     </>
   );
 }

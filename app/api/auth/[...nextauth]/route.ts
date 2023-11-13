@@ -60,22 +60,13 @@ export const authOptions: AuthOptions = {
   callbacks: {
     jwt({ token, user, session }) {
       if (user) {
-        return {
-          ...token,
-          ...user,
-        };
+        return { ...token, ...user };
       }
       return token;
     },
     session({ session, token, user }) {
-      console.log("🚀 ~ file: route.ts:71 ~ session ~ token:", token);
-      //   return {...session, user:{
-      //     ...session.user,
-      //     username :user.username,
-      //     accessToken :user.accessToken,
-      //     roles : user
-      //   }};
-
+      session.user = token as any;
+      console.log("🚀 ~ file: route.ts:69 ~ session ~ session:", session)
       return session;
     },
   },
