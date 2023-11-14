@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.1.13",
+    "axios": "^1.6.1",
     "bcryptjs": "^2.4.3",
     "framer-motion": "^10.16.4",
     "hybrid-crypto-js": "^0.2.4",
@@ -22,6 +23,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.47.0",
+    "react-query": "^3.39.3",
     "zod": "^3.22.4"
   },
   "devDependencies": {

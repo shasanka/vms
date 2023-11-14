@@ -23,8 +23,8 @@ const VisitorForm = () => {
 
   const {
     districts,
-    // pincodes,
     states,
+    pincodes,
     handleDistrictChange,
     handleStateChange,
   } = useVisitorFormHooks();
@@ -42,18 +42,22 @@ const VisitorForm = () => {
       idProofType: Number(data.idProofType),
       idProofNumber: data.idProofNumber,
     };
-    const res = await fetch(`http://127.0.0.1:3001/api/v1/visitor`, {
-      method: "POST",
-      body: JSON.stringify(visitor),
-      cache: "no-cache",
-      headers: new Headers({
-        Authorization: `Bearer ${session?.user.accessToken}`,
-        "Content-Type": "application/json",
-      }),
-    });
-
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/visitor`,
+      {
+        method: "POST",
+        body: JSON.stringify(visitor),
+        cache: "no-cache",
+        headers: new Headers({
+          Authorization: `Bearer ${session?.user.accessToken}`,
+          "Content-Type": "application/json",
+        }),
+      }
+    );
     if (res.ok) {
       const response = await res.json();
+      console.log("🚀 ~ file: VisitorForm.tsx:59 ~ constonSubmit:SubmitHandler<IVisitor>= ~ response:", response)
+     
     } else {
       const r = await res.json();
     }
@@ -134,13 +138,13 @@ const VisitorForm = () => {
             </option>
           ))}
         </select>
-        {/* <select {...register("pincode")} placeholder="Pincode">
+        <select {...register("pincode")} placeholder="Pincode">
           {pincodes?.map((pincode) => (
             <option key={pincode} value={pincode}>
               {pincode}
             </option>
           ))}
-        </select> */}
+        </select>
         <select {...register("idProofType")} placeholder="ID proof type">
           {idProofOptions.map((item, idx) => (
             <option key={idx} value={item.value as number}>
@@ -155,7 +159,10 @@ const VisitorForm = () => {
           {...register("idProofNumber")}
         />
 
-        <button className="bg-gray-600 hover:bg-gray-700 rounded-md text-white py-2" type="submit">
+        <button
+          className="bg-gray-600 hover:bg-gray-700 rounded-md text-white py-2"
+          type="submit"
+        >
           Submit
         </button>
       </div>

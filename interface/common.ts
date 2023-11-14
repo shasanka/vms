@@ -33,16 +33,16 @@ export interface IOpt {
   desc: string;
 }
 
-export interface IDistrict {
-  id?: string;
-  name: string;
-  pincodes: number[];
-}
-export interface IState {
-  _id?: string;
-  name: string;
-  districtID: IDistrict[];
-}
+// export interface IDistrict {
+//   id?: string;
+//   name: string;
+//   pincodes: number[];
+// }
+// export interface IState {
+//   _id?: string;
+//   name: string;
+//   districtID: IDistrict[];
+// }
 
 export interface Response<T> {
   message: string;
@@ -61,4 +61,17 @@ export enum EEntryStatus {
   REGISTERED = 1,
   CHECKEDIN = 2,
   CHECKEDOUT = 3,
+}
+
+export interface IDistrict {
+  name: string;
+  geoCode: number[];
+  pinCodes : number[];
+  _id:string
+}
+
+export interface IState{
+  id:string;
+  name : string;
+  districts:IDistrict[]
 }

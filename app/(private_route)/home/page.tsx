@@ -2,11 +2,11 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import VisitorsTable from "@/components/VisitorsTable";
 import { getServerSession } from "next-auth";
 
+
 async function getData() {
   const session = await getServerSession(authOptions);
-  console.log("🚀 ~ file: page.tsx:7 ~ getData ~ session:", session)
   try {
-    const res = await fetch(`${process.env.NEXT_BACKEND_URL}/api/v1/visitor`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/visitor`, {
       headers: new Headers({
         Authorization: `Bearer ${session?.user.accessToken}`,
         "Content-Type": "application/json",
@@ -26,15 +26,15 @@ async function getData() {
 }
 
 export default async function Home() {
-  const res = await getData();
-  console.log("🚀 ~ file: page.tsx:30 ~ Home ~ res:", res)
+  // const res = await getData();
+  // console.log("🚀 ~ file: page.tsx:30 ~ Home ~ res:", res)
   return (
     <>
-      {res.data ? (
-        <VisitorsTable visitors={res.data} />
-      ) : (
-        <p>Loading or no data available.</p>
-      )}
+      {/* {res.data ? (
+        ) : (
+          <p>Loading or no data available.</p>
+          )} */}
+          <VisitorsTable />
     </>
   );
 }

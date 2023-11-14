@@ -9,13 +9,36 @@ import {
   TableCell,
   getKeyValue,
 } from "@nextui-org/react";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { MouseEventHandler } from "react";
+import { useQuery } from "react-query";
 
-interface IVisitorsTableProps {
-  visitors: IVisitor[];
-}
-const VisitorsTable = ({ visitors }: IVisitorsTableProps) => {
+const VisitorsTable = () => {
+  const { data: session } = useSession();
+  const { data, isLoading, isError } = useQuery<IVisitor[]>({
+    queryKey: ["visitors"],
+    queryFn: async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/visitor`,
+          {
+            headers: {
+              'Authorization': `Bearer ${session?.user.accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+     
+        return await res.data.data
+      } catch (error: any) {
+        throw new Error(error);
+      }
+    },
+    enabled:!!session?.user.accessToken,
+  });
+
+
   const columns = [
     {
       key: "phoneNumber",
@@ -55,27 +78,37 @@ const VisitorsTable = ({ visitors }: IVisitorsTableProps) => {
     },
   ];
 
-const router= useRouter()
+
+  if (isLoading) return <h1>Loading</h1>;
+  if (isError) return <h1>Error</h1>;
+  const router = useRouter();
+  console.log(data);
   return (
+    <>
+    
+
     <Table
       aria-label="Example table with dynamic content"
       selectionMode="single"
       selectionBehavior="replace"
       onRowAction={(key) => router.push(`home/${key}`)}
-    >
+      >
       <TableHeader columns={columns}>
         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
-      <TableBody items={visitors}>
-        {(item) => (
-          <TableRow key={item._id}>
-            {(columnKey) => (
-              <TableCell>{getKeyValue(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
+      <TableBody items={data||[]}>
+        {(item) => {
+          return (
+            <TableRow key={item._id}>
+              {(columnKey) => (
+                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+                )}
+            </TableRow>
+          )
+        }}
       </TableBody>
     </Table>
+        </>
   );
 };
 

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Provider from "./Provider";
 import { TopBar } from "@/components/TopBar";
+import TanstackProvider from "@/components/Providers/TanstackProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,10 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Provider>
-          {/* <div>{children}</div> */}
-          {children}
-        </Provider>
+        <TanstackProvider>
+          <Provider>{children}</Provider>
+        </TanstackProvider>
       </body>
     </html>
   );
