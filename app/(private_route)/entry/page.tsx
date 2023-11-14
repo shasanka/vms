@@ -2,13 +2,13 @@
 import EntryVisitor from "@/components/EntryVisitor";
 import EntryVisitorData from "@/components/EntryVisitorData";
 import { IVisitor } from "@/interface/common";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 const Entry = () => {
   const [visitor, setVisitor] = useState<IVisitor | null>(null);
-  const handleSetVisitor = (visitor: IVisitor | null) => {
+  const handleSetVisitor = useCallback((visitor: IVisitor | null) => {
     setVisitor(visitor);
-  };
+  },[]);
   return (
     <>
       <div className="flex flex-col gap-4">

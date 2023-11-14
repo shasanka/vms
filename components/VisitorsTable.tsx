@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "react-query";
 
 const VisitorsTable = () => {
+  const router = useRouter();
   const { data: session } = useSession();
   const { data, isLoading, isError } = useQuery<IVisitor[]>({
     queryKey: ["visitors"],
@@ -81,8 +82,7 @@ const VisitorsTable = () => {
 
   if (isLoading) return <h1>Loading</h1>;
   if (isError) return <h1>Error</h1>;
-  const router = useRouter();
-  console.log(data);
+
   return (
     <>
     

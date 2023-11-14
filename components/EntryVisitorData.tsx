@@ -9,7 +9,7 @@ const EntryVisitorData = ({ visitor }: { visitor: IVisitor }) => {
       <h1 className="font-bold text-lg">Visitor Data</h1>
       <div className="flex flex-col gap-10 justify-start md:gap-4 lg:flex-row">
         <DisplayItem label="Name" data={visitor.firstName + visitor.lastName} />
-        <DisplayItem label="Phone No." data={visitor.phoneNo.toString()} />
+        <DisplayItem label="Phone No." data={visitor.phoneNumber.toString()} />
         <DisplayItem label="Address" data={visitor.address} />
         <DisplayItem label="State" data={visitor.state} />
         <DisplayItem label="District" data={visitor.district} />

@@ -1,8 +1,10 @@
 "use client";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useCallback} from "react";
+import { useCallback } from "react";
 import { debounce } from "lodash";
 import { IEntry, IVisitor, Response } from "@/interface/common";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const EntryVisitor = ({
   setVisitor,
@@ -14,10 +16,11 @@ const EntryVisitor = ({
     handleSubmit,
     watch,
     setValue,
-    // formState: { errors },
   } = useForm<IEntry>();
 
   const visitorWatcher = watch("visitorId");
+
+  const { data: session } = useSession();
 
   const onSubmit: SubmitHandler<IEntry> = async (data) => {
     console.log(data);
@@ -35,22 +38,27 @@ const EntryVisitor = ({
     }
   };
 
-
   const fetchVisitorData = async (phoneNo: number) => {
     try {
-      const res = await fetch(`api/visitor/${phoneNo}`, {
-        method: "GET",
-      });
-      if (res.ok) {
-        const resJson: Response<IVisitor> = await res.json();
 
-        setValue("visitorId", resJson.data._id);
-        setVisitor(resJson.data);
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/visitor/${phoneNo}`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.accessToken}`,
+          },
+        }
+      );
+      if (res.data) {
+        setValue("visitorId", res.data.data[0]._id);
+        setVisitor(res.data.data[0]);
       } else {
         setValue("visitorId", "");
         setVisitor(null);
       }
-    } catch {
+    } catch (e) {
+      console.log(e);
+      setValue("visitorId", "");
       setVisitor(null);
     }
   };
@@ -59,7 +67,7 @@ const EntryVisitor = ({
     debounce((phoneNo) => {
       fetchVisitorData(phoneNo);
     }, 500),
-    []
+    [session?.user]
   );
 
   const handlePhoneNoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +91,6 @@ const EntryVisitor = ({
           type="tel"
           required
           onChange={handlePhoneNoChange}
-         
         />
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
