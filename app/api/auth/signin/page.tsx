@@ -5,6 +5,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { IUser } from "@/components/RegisterForm";
+import Image from "next/image";
 
 const SignIn = () => {
   const router = useRouter();
@@ -48,7 +49,7 @@ const SignIn = () => {
             <div className="flex items-center justify-start">
             
               <Link href="/home" className="flex ml-2 md:mr-24">
-                <img
+                <Image
                   src="https://flowbite.com/docs/images/logo.svg"
                   className="h-8 mr-3"
                   alt="FlowBite Logo"

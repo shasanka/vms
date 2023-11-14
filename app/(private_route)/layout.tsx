@@ -1,6 +1,7 @@
 "use client"
 import LogoutButton from "@/components/LogoutButton";
 import { DoorOpen, Menu, Siren, UserPlus, Users } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname,useRouter } from "next/navigation";
 import React, { ReactNode } from "react";
@@ -22,7 +23,7 @@ const PrivateLayout = ({ children }: { children: ReactNode }) => {
                 <Menu />
               </button>
               <Link href="/home" className="flex ml-2 md:mr-24">
-                <img
+                <Image
                   src="https://flowbite.com/docs/images/logo.svg"
                   className="h-8 mr-3"
                   alt="FlowBite Logo"
