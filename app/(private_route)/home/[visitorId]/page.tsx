@@ -1,47 +1,53 @@
-import { connectMongoDB } from "@/lib/mongodb";
-import Entry from "@/models/entry";
-import { NextResponse } from "next/server";
+"use client"
+
+import { IEntry } from "@/interface/common";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 import React from "react";
-
-const getEntries = async (visitorId: string) => {
-  await connectMongoDB();
-  try {
-    const entries = await Entry.find({
-      visitorId: visitorId,
-    });
-
-    // If the entry was found, return a success response with the entry data
-    if (entries) {
-      return NextResponse.json(
-        { message: "found", data: entries },
-        { status: 200 }
-      );
-    } else {
-      // If the entry was not found, return a not found response
-      return NextResponse.json({ message: "not found" }, { status: 404 });
-    }
-  } catch (e) {
-    // Handle any errors that occur during database operations
-    console.error(e);
-    return NextResponse.json({ message: "error" }, { status: 500 });
-  }
-};
+import { useQuery } from "react-query";
 
 
-const VisitorPageWithId = async ({
+
+const VisitorPageWithId = ({
   params,
 }: {
   params: { visitorId: string };
 }) => {
-  console.log("🚀 ~ file: page.tsx:13 ~ params.visitorId:", params.visitorId)
-  const d = await getEntries(params.visitorId);
-  const res = await d.json();
-  console.log("🚀 ~ file: page.tsx:40 ~ res:", res.data[0].registrationTimestamp)
-  return <>
-  {
-    res.data.map((val:any)=>val.createdAt)
-  }
-  </>
+  const { data: session } = useSession();
+  const {data, isLoading, isError} = useQuery({
+    queryKey: ["visitor"],
+    queryFn: async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/entry/${params.visitorId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user.accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if(res.status === 200){
+
+          return await res.data.data as IEntry[];
+        }else return null
+
+      } catch (error: any) {
+        throw new Error(error);
+      }
+    },
+    enabled: !!session?.user.accessToken,
+  });
+
+  if(isLoading) return <h1>Loading</h1>
+  if(isError) return <h1>Error</h1>
+  return (
+    <>
+      {
+        data?.map((val:any)=>val.createdAt)
+      }
+    </>
+  );
 };
 
 export default VisitorPageWithId;

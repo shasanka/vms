@@ -2,10 +2,13 @@
 import LogoutButton from "@/components/LogoutButton";
 import { DoorOpen, Menu, Siren, UserPlus, Users } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname,useRouter } from "next/navigation";
 import React, { ReactNode } from "react";
 const PrivateLayout = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname()
+  console.log("🚀 ~ file: layout.tsx:9 ~ PrivateLayout ~ pathname:", pathname.startsWith('/home') )
+// 
+
   return (
     <>
       <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -40,7 +43,7 @@ const PrivateLayout = ({ children }: { children: ReactNode }) => {
             <li>
               <Link
                 href="/home"
-                className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${pathname === '/home' && 'bg-gray-700'}`}
+                className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${pathname.startsWith('/home') && 'bg-gray-700'}`}
               >
                 <Users className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
 
@@ -50,7 +53,7 @@ const PrivateLayout = ({ children }: { children: ReactNode }) => {
             <li>
               <Link
                 href="/visitor"
-                className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${pathname === '/visitor' && 'bg-gray-700'}`}
+                className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${pathname.startsWith('/visitor') && 'bg-gray-700'}`}
               >
                 <UserPlus className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
 
@@ -60,7 +63,7 @@ const PrivateLayout = ({ children }: { children: ReactNode }) => {
             <li>
               <Link
                 href="/entry"
-                className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${pathname === '/entry' && 'bg-gray-700'}`}
+                className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${pathname.startsWith('/entry') && 'bg-gray-700'}`}
               >
                 <DoorOpen className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
 

@@ -11,36 +11,32 @@ const EntryVisitor = ({
 }: {
   setVisitor: (visitor: IVisitor | null) => void;
 }) => {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-  } = useForm<IEntry>();
+  const { register, handleSubmit, watch, setValue } = useForm<IEntry>();
 
   const visitorWatcher = watch("visitorId");
 
   const { data: session } = useSession();
 
   const onSubmit: SubmitHandler<IEntry> = async (data) => {
-    console.log(data);
 
-    const res = await fetch("/api/entry", {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
-
-    if (res.ok) {
-      const resJson = await res.json();
-      console.log(resJson);
-    } else {
-      console.log("ERROR in entry");
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/entry`,
+        { visitorId: data.visitorId },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user.accessToken}`,
+          },
+        }
+      );
+    } catch (e) {
+      console.log(e);
     }
   };
 
   const fetchVisitorData = async (phoneNo: number) => {
     try {
-
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/visitor/${phoneNo}`,
         {
