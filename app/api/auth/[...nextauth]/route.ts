@@ -1,10 +1,8 @@
-import { connectMongoDB } from "@/lib/mongodb";
-import User from "@/models/user";
+
 import { AuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
-import { NextResponse } from "next/server";
+
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -23,7 +21,7 @@ export const authOptions: AuthOptions = {
 
         try {
           const response = await fetch(
-            "http://localhost:3001/api/v1/auth/signin",
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/signin`,
             {
               method: "POST",
               body: JSON.stringify({
