@@ -25,20 +25,19 @@ const VisitorsTable = () => {
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/visitor`,
           {
             headers: {
-              'Authorization': `Bearer ${session?.user.accessToken}`,
+              Authorization: `Bearer ${session?.user.accessToken}`,
               "Content-Type": "application/json",
             },
           }
         );
-     
-        return await res.data.data
+
+        return await res.data.data;
       } catch (error: any) {
         throw new Error(error);
       }
     },
-    enabled:!!session?.user.accessToken,
+    enabled: !!session?.user.accessToken,
   });
-
 
   const columns = [
     {
@@ -79,36 +78,35 @@ const VisitorsTable = () => {
     },
   ];
 
-
   if (isLoading) return <h1>Loading</h1>;
   if (isError) return <h1>Error</h1>;
 
   return (
     <>
-    
-
-    <Table
-      aria-label="Example table with dynamic content"
-      selectionMode="single"
-      selectionBehavior="replace"
-      onRowAction={(key) => router.push(`home/${key}`)}
+      <Table
+        aria-label="Example table with dynamic content"
+        selectionMode="single"
+        selectionBehavior="replace"
+        onRowAction={(key) => router.push(`home/${key}`)}
       >
-      <TableHeader columns={columns}>
-        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-      </TableHeader>
-      <TableBody items={data||[]}>
-        {(item) => {
-          return (
-            <TableRow key={item._id}>
-              {(columnKey) => (
-                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+        <TableHeader columns={columns}>
+          {(column) => (
+            <TableColumn key={column.key}>{column.label}</TableColumn>
+          )}
+        </TableHeader>
+        <TableBody items={data || []}>
+          {(item) => {
+            return (
+              <TableRow key={item._id}>
+                {(columnKey) => (
+                  <TableCell>{getKeyValue(item, columnKey)}</TableCell>
                 )}
-            </TableRow>
-          )
-        }}
-      </TableBody>
-    </Table>
-        </>
+              </TableRow>
+            );
+          }}
+        </TableBody>
+      </Table>
+    </>
   );
 };
 

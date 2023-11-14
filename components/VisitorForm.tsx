@@ -1,10 +1,8 @@
 "use client";
-import { DistrictType } from "@/app/api/auth/state/[stateName]/route";
 import { useVisitorFormHooks } from "@/hooks/useVisitorFormHooks";
 import { IDProofType, IVisitor } from "@/interface/common";
 import { generateIOptsFromEnum } from "@/utils/common";
 import { useSession } from "next-auth/react";
-import { revalidatePath } from "next/cache";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -132,7 +130,7 @@ const VisitorForm = () => {
           {...register("district")}
           onChange={handleDistrictChange}
         >
-          {districts?.map((district: DistrictType, idx) => (
+          {districts?.map((district, idx) => (
             <option key={idx} value={district.name}>
               {district.name}
             </option>

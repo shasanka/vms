@@ -3,8 +3,8 @@
 import { IEntry } from "@/interface/common";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import React from "react";
-import { useQuery } from "react-query";
+import React, { useEffect } from "react";
+import { useQuery, useQueryClient } from "react-query";
 
 
 
@@ -13,6 +13,7 @@ const VisitorPageWithId = ({
 }: {
   params: { visitorId: string };
 }) => {
+  const queryClient = useQueryClient()
   const { data: session } = useSession();
   const {data, isLoading, isError} = useQuery({
     queryKey: ["visitor"],
@@ -38,9 +39,17 @@ const VisitorPageWithId = ({
     },
     enabled: !!session?.user.accessToken,
   });
-
+  
+  useEffect(() => {
+    return () => {
+      // Cleanup function, will be called when the component is unmounted
+      // Clear the data here
+      queryClient.removeQueries(["visitor"]);
+    };
+  }, []);
   if(isLoading) return <h1>Loading</h1>
   if(isError) return <h1>Error</h1>
+
   return (
     <>
       {

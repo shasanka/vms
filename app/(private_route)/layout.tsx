@@ -6,7 +6,6 @@ import { usePathname,useRouter } from "next/navigation";
 import React, { ReactNode } from "react";
 const PrivateLayout = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname()
-  console.log("🚀 ~ file: layout.tsx:9 ~ PrivateLayout ~ pathname:", pathname.startsWith('/home') )
 // 
 
   return (

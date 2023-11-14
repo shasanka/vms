@@ -21,7 +21,6 @@ const RegisterForm = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    console.log("🚀 ~ file: RegisterForm.tsx:24 ~ RegisterForm ~ e:", e.target)
     e.persist(); // Use e.persist() instead of e.preventDefault()
     setUser((prevState) => ({
       ...prevState,
