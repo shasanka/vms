@@ -3,9 +3,9 @@ import { useQRCode } from "next-qrcode";
 import React from "react";
 
 const QR = () => {
-  const { Image } = useQRCode();
+  const { Image :Im } = useQRCode();
   return (
-    <Image
+    <Im
       text={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/entry/65538c531f1d1d8f8a4fe0c9`}
       options={{
         type: "image/jpeg",
