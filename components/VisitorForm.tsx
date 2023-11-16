@@ -37,9 +37,9 @@ const VisitorForm = () => {
       phoneNumber: Number(data.phoneNumber),
       email: data.email,
       address: data.address,
-      state: data.state,
-      district: data.district,
-      pincode: Number(data.pincode),
+      state: data.state || states[0].id,
+      district: data.district || districts[0].name,
+      pincode: Number(data.pincode) || pincodes[0],
       idProofType: Number(data.idProofType),
       idProofNumber: data.idProofNumber,
     };
