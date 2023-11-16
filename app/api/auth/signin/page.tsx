@@ -50,6 +50,8 @@ const SignIn = () => {
             
               <Link href="/home" className="flex ml-2 md:mr-24">
                 <Image
+                height={20}
+                width={20}
                   src="https://flowbite.com/docs/images/logo.svg"
                   className="h-8 mr-3"
                   alt="FlowBite Logo"

@@ -30,6 +30,7 @@ const VisitorsTable = () => {
             },
           }
         );
+        console.log("🚀 ~ file: VisitorsTable.tsx:33 ~ queryFn: ~ res:", res)
 
         return await res.data.data;
       } catch (error: any) {
