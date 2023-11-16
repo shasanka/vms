@@ -1,16 +1,18 @@
 "use client";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useCallback } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import { debounce } from "lodash";
 import { IEntry, IVisitor, Response } from "@/interface/common";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import {useSnackbar} from 'notistack'
 
 const EntryVisitor = ({
   setVisitor,
 }: {
   setVisitor: (visitor: IVisitor | null) => void;
 }) => {
+  const {enqueueSnackbar} = useSnackbar();
   const { register, handleSubmit, watch, setValue } = useForm<IEntry>();
 
   const visitorWatcher = watch("visitorId");
@@ -30,8 +32,27 @@ const EntryVisitor = ({
           },
         }
       );
+      console.log("🚀 ~ file: EntryVisitor.tsx:35 ~ constonSubmit:SubmitHandler<IEntry>= ~ res:", res)
+      if(res.status === 201){
+        enqueueSnackbar('Entry added', {
+          variant:'success',
+          autoHideDuration:1000,
+          anchorOrigin:{
+            horizontal:'right',
+            vertical:'top'
+          }
+        })
+      }
     } catch (e) {
       console.log(e);
+      enqueueSnackbar('Uknown error', {
+        variant:'error',
+        autoHideDuration:1000,
+        anchorOrigin:{
+          horizontal:'right',
+          vertical:'top'
+        }
+      })
     }
   };
 
