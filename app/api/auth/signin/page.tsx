@@ -30,7 +30,8 @@ const SignIn = () => {
       const res = await signIn("credentials", {
         email: user.email,
         password: user.password,
-        redirect: false,
+        callbackUrl:'/home'
+        // redirect: false,
       });
 
       if (res?.error) {
