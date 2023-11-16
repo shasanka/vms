@@ -3,6 +3,7 @@ import { useVisitorFormHooks } from "@/hooks/useVisitorFormHooks";
 import { IDProofType, IVisitor } from "@/interface/common";
 import { generateIOptsFromEnum } from "@/utils/common";
 import { useSession } from "next-auth/react";
+import { useSnackbar } from "notistack";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -12,10 +13,12 @@ export interface State {
 }
 
 const VisitorForm = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const { data: session } = useSession();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<IVisitor>();
 
@@ -54,10 +57,34 @@ const VisitorForm = () => {
     );
     if (res.ok) {
       const response = await res.json();
-      console.log("🚀 ~ file: VisitorForm.tsx:59 ~ constonSubmit:SubmitHandler<IVisitor>= ~ response:", response)
-     
+
+      console.log(
+        "🚀 ~ file: VisitorForm.tsx:59 ~ constonSubmit:SubmitHandler<IVisitor>= ~ response:",
+        response
+      );
+      enqueueSnackbar("Visitor added successfully", {
+        variant: "success",
+        autoHideDuration: 1000,
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "top",
+        },
+      });
+      reset();
     } else {
       const r = await res.json();
+      console.log(
+        "🚀 ~ file: VisitorForm.tsx:71 ~ constonSubmit:SubmitHandler<IVisitor>= ~ r:",
+        r
+      );
+      enqueueSnackbar("Unable to add visitor", {
+        variant: "error",
+        autoHideDuration: 1000,
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "top",
+        },
+      });
     }
   };
 

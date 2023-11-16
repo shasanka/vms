@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <TanstackProvider>
-          <Provider>{children}</Provider>
+            <Provider>{children}</Provider>
         </TanstackProvider>
       </body>
     </html>
