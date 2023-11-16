@@ -5,6 +5,6 @@ export default async function Page() {
   // const session = await getServerSession();
   // if (!session?.user) redirect("/");
   // else redirect("/home");
-  redirect("/visitor");
+  redirect("/home");
 // return <Home/>
 }
