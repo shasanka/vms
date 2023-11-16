@@ -6,7 +6,7 @@ const QR = () => {
   const { Image :Im } = useQRCode();
   return (
     <Im
-      text={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/entry/65538c531f1d1d8f8a4fe0c9`}
+      text={`${process.env.NEXT_PUBLIC_BACKEND_URL}/entry/65563b11057d4a37b0fa59a3`}
       options={{
         type: "image/jpeg",
         quality: 0.3,
