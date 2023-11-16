@@ -53,7 +53,7 @@ const VisitorPageWithId = ({
   return (
     <>
       {
-        data?.map((val:any)=><h1>Registration Timestamp: <span>{val.createdAt}</span></h1>)
+        data?.map((val:any)=><h1 key={val.createdAt}>Registration Timestamp: <span>{val.createdAt}</span></h1>)
       }
     </>
   );
