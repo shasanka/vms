@@ -30,7 +30,7 @@ const VisitorsTable = () => {
             },
           }
         );
-        console.log("🚀 ~ file: VisitorsTable.tsx:33 ~ queryFn: ~ res:", res)
+        console.log("🚀 ~ file: VisitorsTable.tsx:33 ~ queryFn: ~ res:", res);
 
         return await res.data.data;
       } catch (error: any) {
@@ -79,11 +79,15 @@ const VisitorsTable = () => {
     },
   ];
 
+
   if (isLoading) return <h1>Loading</h1>;
   if (isError) return <h1>Error</h1>;
 
+
+
   return (
     <>
+
       <Table
         aria-label="Example table with dynamic content"
         selectionMode="single"

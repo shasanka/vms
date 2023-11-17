@@ -1,6 +1,6 @@
 "use client";
 import LogoutButton from "@/components/LogoutButton";
-import { DoorOpen, Menu, Siren, UserPlus, Users } from "lucide-react";
+import { DoorOpen, Menu, UserPlus, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -13,7 +13,6 @@ const PrivateLayout = ({ children }: { children: ReactNode }) => {
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
   };
-  //
 
   return (
     <>
@@ -69,7 +68,7 @@ const PrivateLayout = ({ children }: { children: ReactNode }) => {
                   <span className="ml-3">Visitors</span>
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link
                   href="/visitor"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
@@ -80,7 +79,7 @@ const PrivateLayout = ({ children }: { children: ReactNode }) => {
 
                   <span className="ml-3">Add visitor</span>
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link
                   href="/entry"
@@ -90,7 +89,7 @@ const PrivateLayout = ({ children }: { children: ReactNode }) => {
                 >
                   <DoorOpen className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
 
-                  <span className="ml-3">Add entry</span>
+                  <span className="ml-3">Entry</span>
                 </Link>
               </li>
               <li>

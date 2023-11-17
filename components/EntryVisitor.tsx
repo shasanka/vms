@@ -5,55 +5,66 @@ import { debounce } from "lodash";
 import { IEntry, IVisitor, Response } from "@/interface/common";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import {useSnackbar} from 'notistack'
+import { useSnackbar } from "notistack";
+import { useMutation, useQueryClient } from "react-query";
 
 const EntryVisitor = ({
   setVisitor,
 }: {
   setVisitor: (visitor: IVisitor | null) => void;
 }) => {
-  const {enqueueSnackbar} = useSnackbar();
+  const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
   const { register, handleSubmit, watch, setValue } = useForm<IEntry>();
 
   const visitorWatcher = watch("visitorId");
 
   const { data: session } = useSession();
 
-  const onSubmit: SubmitHandler<IEntry> = async (data) => {
-
-    try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/entry`,
-        { visitorId: data.visitorId },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.user.accessToken}`,
-          },
-        }
-      );
-      console.log("🚀 ~ file: EntryVisitor.tsx:35 ~ constonSubmit:SubmitHandler<IEntry>= ~ res:", res)
-      if(res.status === 201){
-        enqueueSnackbar('Entry added', {
-          variant:'success',
-          autoHideDuration:1000,
-          anchorOrigin:{
-            horizontal:'right',
-            vertical:'top'
+  const mutation = useMutation({
+    mutationFn: async (data: IEntry) => {
+      try {
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/entry`,
+          { visitorId: data.visitorId },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session?.user.accessToken}`,
+            },
           }
-        })
-      }
-    } catch (e) {
-      console.log(e);
-      enqueueSnackbar('Uknown error', {
-        variant:'error',
-        autoHideDuration:1000,
-        anchorOrigin:{
-          horizontal:'right',
-          vertical:'top'
+        );
+
+        if (res.status === 201) {
+          enqueueSnackbar("Entry added", {
+            variant: "success",
+            autoHideDuration: 1000,
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "top",
+            },
+          });
         }
-      })
-    }
+      } catch (e) {
+        console.log(e);
+        enqueueSnackbar("Uknown error", {
+          variant: "error",
+          autoHideDuration: 1000,
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "top",
+          },
+        });
+      }
+    },
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["entry"] });
+    },
+  });
+
+  const onSubmit: SubmitHandler<IEntry> = async (data) => {
+    mutation.mutateAsync(data);
   };
 
   const fetchVisitorData = async (phoneNo: number) => {
@@ -99,6 +110,7 @@ const EntryVisitor = ({
 
     debouncedFetchData(phoneNo);
   };
+
 
   return (
     <>
