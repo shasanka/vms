@@ -108,9 +108,10 @@ const RegisterForm = () => {
               onChange={handleChange}
             >
               <option value="">Select Role</option>
-              <option value={"user"}>User</option>
+              <option value={"reception"}>Reception</option>
+              <option value={"security"}>Security</option>
+              <option value={"office"}>Office</option>
               <option value={"admin"}>Admin</option>
-              <option value={"moderator"}>Moderator</option>
             </select>
             <button
               type="submit"
