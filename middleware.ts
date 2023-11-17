@@ -7,7 +7,7 @@ export default withAuth(
   // `withAuth` augments your `Request` with the user's token.
   function middleware(req) {
     const { pathname, origin } = req.nextUrl
-    if (pathname === '/home' && req.nextauth.token?.roles !== 'ROLE_ADMIN') {
+    if (pathname === '/home' && !req.nextauth.token?.roles.includes('ROLE_ADMIN')) {
         return NextResponse.redirect(`${origin}/entry`)
     }
   },
@@ -18,4 +18,3 @@ export default withAuth(
   }
 );
 export const config = { matcher: ["/((?!register|api|$).*)"] };
-// export const config = { matcher: ["/dashboard"] }

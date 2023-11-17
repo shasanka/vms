@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { JWT } from "next-auth/jwt"
 
 declare module "next-auth" {
   interface Session {
@@ -9,12 +10,14 @@ declare module "next-auth" {
       role: string[];
       accessToken: string;
     };
+   
   }
-  interface Token {
-    name: string;
-    email: string;
-    picture?: string;
+  
+}
+declare module "next-auth/jwt" {
+  /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
+  interface JWT extends DefaultJWT {
     roles: string[];
-    // Add other properties as needed
   }
 }
+
