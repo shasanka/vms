@@ -6,7 +6,8 @@ import { NextResponse } from "next/server";
 export default withAuth(
   function middleware(req) {
     const { pathname, origin } = req.nextUrl
-    if (pathname === '/home' && !req.nextauth.token?.roles.includes('ROLE_ADMIN')) {
+    console.log("🚀 ~ file: middleware.ts:10 ~ middleware ~ req.nextauth.token?.role:", req.nextauth.token?.role)
+    if (pathname === '/home' && req.nextauth.token?.role!== 'ROLE_ADMIN' ) {
         return NextResponse.redirect(`${origin}/entry`)
     }
   },

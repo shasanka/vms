@@ -7,7 +7,7 @@ declare module "next-auth" {
       id: string;
       username: string;
       email: string;
-      role: string[];
+      role: string;
       accessToken: string;
     };
    
@@ -17,7 +17,7 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
   interface JWT extends DefaultJWT {
-    roles: string[];
+    role: string;
   }
 }
 
