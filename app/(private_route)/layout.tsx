@@ -55,7 +55,7 @@ const PrivateLayout = ({ children }: { children: ReactNode }) => {
               </div>
             </div>
           </nav>
-          <aside
+          {/* <aside
             className={`fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700 ${
               isSidebarOpen ? "translate-x-0" : "-translate-x-full"
             }`}
@@ -100,8 +100,9 @@ const PrivateLayout = ({ children }: { children: ReactNode }) => {
                 </li>
               </ul>
             </div>
-          </aside>
-          <div className="p-4 sm:ml-64">
+          </aside> */}
+          {/* <div className="p-4 sm:ml-64"> */}
+          <div className="p-4">
             <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
               {children}
             </div>

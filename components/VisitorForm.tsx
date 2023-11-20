@@ -2,6 +2,7 @@
 import { useVisitorFormHooks } from "@/hooks/useVisitorFormHooks";
 import { IDProofType, IVisitor } from "@/interface/common";
 import { generateIOptsFromEnum } from "@/utils/common";
+import axios, { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 import { useSnackbar } from "notistack";
 import React from "react";
@@ -43,48 +44,41 @@ const VisitorForm = () => {
       idProofType: Number(data.idProofType),
       idProofNumber: data.idProofNumber,
     };
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/visitor`,
-      {
-        method: "POST",
-        body: JSON.stringify(visitor),
-        cache: "no-cache",
-        headers: new Headers({
-          Authorization: `Bearer ${session?.user.accessToken}`,
-          "Content-Type": "application/json",
-        }),
-      }
-    );
-    if (res.ok) {
-      const response = await res.json();
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/visitor`,
+        JSON.stringify(visitor),
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      console.log(
-        "🚀 ~ file: VisitorForm.tsx:59 ~ constonSubmit:SubmitHandler<IVisitor>= ~ response:",
-        response
-      );
-      enqueueSnackbar("Visitor added successfully", {
-        variant: "success",
-        autoHideDuration: 1000,
-        anchorOrigin: {
-          horizontal: "right",
-          vertical: "top",
-        },
-      });
-      reset();
-    } else {
-      const r = await res.json();
-      console.log(
-        "🚀 ~ file: VisitorForm.tsx:71 ~ constonSubmit:SubmitHandler<IVisitor>= ~ r:",
-        r
-      );
-      enqueueSnackbar("Unable to add visitor", {
-        variant: "error",
-        autoHideDuration: 1000,
-        anchorOrigin: {
-          horizontal: "right",
-          vertical: "top",
-        },
-      });
+      if (res.status === 201) {
+        enqueueSnackbar("Visitor added successfully", {
+          variant: "success",
+          autoHideDuration: 1000,
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "top",
+          },
+        });
+        reset();
+      } 
+    } catch (e: any) {
+      const err = e as AxiosError;
+    
+      if (err.isAxiosError && err.response) {
+        const responseData = err.response?.data as ApiResponse;
+        enqueueSnackbar(responseData.message, {
+          variant: "error",
+          autoHideDuration: 1500,
+        });
+      } else {
+        console.error("Unhandled error type:", err);
+      }
     }
   };
 
@@ -96,6 +90,7 @@ const VisitorForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <h1 className="text-xl font-bold my-4">Enter visitor details</h1>
       <div className="grid gap-1 lg:grid-cols-2 md:gap-2">
         <input
           placeholder="Phone Number"
@@ -196,3 +191,9 @@ const VisitorForm = () => {
 };
 
 export default VisitorForm;
+
+
+interface ApiResponse {
+  message: string;
+  // other properties if needed
+}
