@@ -21,6 +21,7 @@ const RegisterForm = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
+    console.log("🚀 ~ file: RegisterForm.tsx:24 ~ RegisterForm ~ e:", e.target.value)
     e.persist(); // Use e.persist() instead of e.preventDefault()
     setUser((prevState) => ({
       ...prevState,
@@ -101,15 +102,16 @@ const RegisterForm = () => {
               onChange={handleChange}
             />
             <select
-              placeholder="State"
+              placeholder="Role"
               name="role"
               value={user.role}
               onChange={handleChange}
             >
               <option value="">Select Role</option>
-              <option value={"user"}>User</option>
+              <option value={"reception"}>Reception</option>
+              <option value={"security"}>Security</option>
+              <option value={"office"}>Office</option>
               <option value={"admin"}>Admin</option>
-              <option value={"moderator"}>Moderator</option>
             </select>
             <button
               type="submit"
