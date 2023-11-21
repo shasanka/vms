@@ -91,8 +91,9 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
 
   const router = useRouter();
   const handleDecode = (result: string) => {
+    console.log("🚀 ~ file: EntryForm.tsx:94 ~ handleDecode ~ result:", result)
     // Navigate to the result page with the decoded data
-    router.push(`${result}`);
+    router.replace(result);
   };
 
   return (
@@ -128,7 +129,7 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
       </form>
       {entry ? (
         <Im
-          text={`${process.env.NEXT_PUBLIC_LINK}/entry/${entry._id}`}
+          text={`http://localhost:3000/entry/${entry._id}`}
           options={{
             type: "image/jpeg",
             quality: 0.3,
@@ -150,7 +151,7 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
         }}
         onError={(error) => setError(error.message)}
       />
-      <pre>{JSON.stringify(data)}</pre>
+      <pre>{data}</pre>
       <pre>{JSON.stringify(error)}</pre>
       {/* <pre>{JSON.stringify(result)}</pre> */}
     </div>
