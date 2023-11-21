@@ -1,9 +1,10 @@
-"use client"
+"use client";
 import { IEntry, IVisitor } from "@/interface/common";
 import { QrScanner } from "@yudiel/react-qr-scanner";
 import axios, { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 import { useQRCode } from "next-qrcode";
+import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -84,9 +85,16 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
     mutation.mutateAsync(data);
   };
   const { Image: Im } = useQRCode();
-  const [data, setData] = useState('No result');
-  const [error, setError] = useState('No Error');
-  const [result, setResult] = useState('No result');
+  const [data, setData] = useState("No result");
+  const [error, setError] = useState("No Error");
+  // const [result, setResult] = useState("No result");
+
+  const router = useRouter();
+  const handleDecode = (result: string) => {
+    // Navigate to the result page with the decoded data
+    router.push(`${result}`);
+  };
+
   return (
     <div>
       <form onSubmit={handleSubmit(submit)}>
@@ -136,13 +144,15 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
         />
       ) : null}
       <QrScanner
-          onDecode={(result) => setData(result)}
-          onError={(error) => setError(error.message)}
-          onResult={result=>setResult(result.getText())}
+        onDecode={(result) => {
+          setData(result);
+          handleDecode(result);
+        }}
+        onError={(error) => setError(error.message)}
       />
       <pre>{JSON.stringify(data)}</pre>
       <pre>{JSON.stringify(error)}</pre>
-      <pre>{JSON.stringify(result)}</pre>
+      {/* <pre>{JSON.stringify(result)}</pre> */}
     </div>
   );
 };
