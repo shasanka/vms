@@ -86,6 +86,7 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
   const { Image: Im } = useQRCode();
   const [data, setData] = useState('No result');
   const [error, setError] = useState('No Error');
+  const [result, setResult] = useState('No result');
   return (
     <div>
       <form onSubmit={handleSubmit(submit)}>
@@ -137,9 +138,11 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
       <QrScanner
           onDecode={(result) => setData(result)}
           onError={(error) => setError(error.message)}
+          onResult={result=>setResult(result.getText())}
       />
       <pre>{JSON.stringify(data)}</pre>
       <pre>{JSON.stringify(error)}</pre>
+      <pre>{JSON.stringify(result)}</pre>
     </div>
   );
 };
