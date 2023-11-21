@@ -1,8 +1,11 @@
+"use client"
 import { IEntry, IVisitor } from "@/interface/common";
+import { QrScanner } from "@yudiel/react-qr-scanner";
 import axios, { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
+import { useQRCode } from "next-qrcode";
 import { useSnackbar } from "notistack";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 interface IEntryFormProps {
@@ -19,17 +22,25 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
     },
   });
 
+  const [entry, setEntry] = useState<Partial<IEntry> | null>(null);
+
   const mutation = useMutation({
     mutationKey: ["entry"],
     mutationFn: async (data: Partial<IEntry>) => {
       try {
-        const res  = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/entry`,JSON.stringify(data), {
-          headers: {
-            Authorization: `Bearer ${session?.user.accessToken}`,
-            "Content-Type": "application/json",
-          },
-        })
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/entry`,
+          JSON.stringify(data),
+          {
+            headers: {
+              Authorization: `Bearer ${session?.user.accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log("🚀 ~ file: EntryForm.tsx:37 ~ mutationFn: ~ res:", res);
         if (res.status === 201) {
+          setEntry(res.data.data);
           enqueueSnackbar("Entry added successfully", {
             variant: "success",
             anchorOrigin: {
@@ -39,6 +50,7 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
             autoHideDuration: 1500,
           });
         } else {
+          setEntry(null);
           enqueueSnackbar("Unable to add entry", {
             variant: "error",
             anchorOrigin: {
@@ -49,14 +61,13 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
           });
         }
       } catch (e) {
-        console.log("🚀 ~ file: EntryForm.tsx:34 ~ mutationFn: ~ res:", e)
-        const err = e as AxiosError
-        // if(axios.isAxiosError(err)){
-          enqueueSnackbar(err.response?.statusText, {
-            variant: "error",
-            autoHideDuration: 1500,
-          });
-        // }
+        setEntry(null);
+        console.log("🚀 ~ file: EntryForm.tsx:34 ~ mutationFn: ~ res:", e);
+        const err = e as AxiosError;
+        enqueueSnackbar(err.response?.statusText, {
+          variant: "error",
+          autoHideDuration: 1500,
+        });
       }
     },
   });
@@ -70,38 +81,63 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
   }, [visitor]);
 
   const submit: SubmitHandler<Partial<IEntry>> = async (data) => {
-    mutation.mutateAsync(data)
+    mutation.mutateAsync(data);
   };
+  const { Image: Im } = useQRCode();
+  const [data, setData] = useState('No result');
   return (
-    <form onSubmit={handleSubmit(submit)}>
-      <div className="flex flex-col gap-4 sm:flex-row md:flex-row lg:flex-row items-center">
-        <input
-          placeholder="Visitor ID"
-          type="text"
-          readOnly
-          required
-          {...register("visitorId")}
+    <div>
+      <form onSubmit={handleSubmit(submit)}>
+        <div className="flex flex-col gap-4 sm:flex-row md:flex-row lg:flex-row items-center">
+          <input
+            placeholder="Visitor ID"
+            type="text"
+            readOnly
+            required
+            {...register("visitorId")}
+          />
+          <input
+            placeholder="Whom to meet?"
+            type="text"
+            required
+            {...register("whomToMeet")}
+          />
+          <input
+            placeholder="Department"
+            type="text"
+            required
+            {...register("department")}
+          />
+          <button
+            className="px-2 py-1 bg-slate-600 text-white rounded-md w-fit h-fit"
+            type="submit"
+          >
+            Generate QR
+          </button>
+        </div>
+      </form>
+      {entry ? (
+        <Im
+          text={`${process.env.NEXT_PUBLIC_LINK}/entry/${entry._id}`}
+          options={{
+            type: "image/jpeg",
+            quality: 0.3,
+            errorCorrectionLevel: "M",
+            margin: 3,
+            scale: 4,
+            width: 200,
+            color: {
+              dark: "#010599FF",
+              light: "#FFBF60FF",
+            },
+          }}
         />
-        <input
-          placeholder="Whom to meet?"
-          type="text"
-          required
-          {...register("whomToMeet")}
-        />
-        <input
-          placeholder="Department"
-          type="text"
-          required
-          {...register("department")}
-        />
-        <button
-          className="px-2 py-1 bg-slate-600 text-white rounded-md w-fit h-fit"
-          type="submit"
-        >
-          Submit
-        </button>
-      </div>
-    </form>
+      ) : null}
+      <QrScanner
+          onDecode={(result) => console.log(result)}
+          onError={(error) => console.log(error?.message)}
+      />
+    </div>
   );
 };
 

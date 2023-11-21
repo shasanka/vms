@@ -5,9 +5,9 @@ import DisplayItem from "./shared/DisplayItem";
 const EntryVisitorData = ({ visitor }: { visitor: IVisitor }) => {
 
   return (
-    <div>
-      <h1 className="font-bold text-lg">Visitor Data</h1>
-      <div className="flex  gap-4 justify-start md:gap-4 lg:flex-row">
+    <div className="max-w-sm w-full lg:max-w-full  rounded-md border border-gray-200  shadow p-2">
+      <h1 className="font-bold text-md">Visitor Data</h1>
+      <div className="flex gap-4 justify-start md:gap-4 lg:flex-row ">
         <DisplayItem label="Name" data={visitor.firstName + visitor.lastName} />
         <DisplayItem label="Phone No." data={visitor.phoneNumber.toString()} />
         <DisplayItem label="Address" data={visitor.address} />

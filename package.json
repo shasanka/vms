@@ -16,8 +16,8 @@
     "@mui/x-date-pickers": "^6.18.1",
     "@nextui-org/react": "^2.1.13",
     "@types/react-date-range": "^1.4.8",
+    "@yudiel/react-qr-scanner": "^1.2.3",
     "axios": "^1.6.1",
-    "bcryptjs": "^2.4.3",
     "dayjs": "^1.11.10",
     "framer-motion": "^10.16.4",
     "hybrid-crypto-js": "^0.2.4",
@@ -37,7 +37,6 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

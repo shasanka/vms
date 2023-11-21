@@ -11,6 +11,7 @@ const EntryPageComponents = () => {
   }, []);
   return (
     <div className="flex flex-col gap-4">
+      Entry Page
       {/* <EntryVisitor setVisitor={handleSetVisitor} />
       {visitor ? <EntryVisitorData visitor={visitor} /> : null}
       <EntryList/> */}

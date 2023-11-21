@@ -89,9 +89,10 @@ const VisitorForm = () => {
   );
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <div className="max-w-4xl">
+    <form onSubmit={handleSubmit(onSubmit)} >
       <h1 className="text-xl font-bold my-4">Enter visitor details</h1>
-      <div className="grid gap-1 lg:grid-cols-2 md:gap-2">
+      <div className="grid gap-1 md:grid-cols-2">
         <input
           placeholder="Phone Number"
           type="number"
@@ -179,14 +180,15 @@ const VisitorForm = () => {
           {...register("idProofNumber")}
         />
 
+      </div>
         <button
-          className="bg-gray-600 hover:bg-gray-700 rounded-md text-white py-2"
+          className="bg-gray-600 hover:bg-gray-700 rounded-md text-white py-1 w-fit px-2 mt-2"
           type="submit"
         >
           Submit
         </button>
-      </div>
     </form>
+    </div>
   );
 };
 

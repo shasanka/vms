@@ -12,7 +12,7 @@ const SearchVisitor = ({ setVisitor }: ISearchVisitorProps) => {
   const { data: session } = useSession();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [phoneNo, setPhoneNo] = useState<string>('');
+  const [phoneNo, setPhoneNo] = useState<string>("");
   const handlePhoneNoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const phoneNo = e.target.value;
@@ -30,7 +30,9 @@ const SearchVisitor = ({ setVisitor }: ISearchVisitorProps) => {
     queryFn: async () => {
       try {
         const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/visitor/${Number(phoneNo)}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/visitor/${Number(
+            phoneNo
+          )}`,
           {
             headers: {
               Authorization: `Bearer ${session?.user.accessToken}`,
@@ -70,34 +72,31 @@ const SearchVisitor = ({ setVisitor }: ISearchVisitorProps) => {
   });
 
   return (
-    <div>
-      <div className="flex flex-col">
-        <div className="flex items-center gap-4">
-          <input
-            placeholder="Phone number"
-            type="tel"
-            required
-            value={phoneNo}
-            onChange={handlePhoneNoChange}
-          />
-          <button
-            className="px-2 py-1 bg-slate-600 text-white rounded-md w-fit h-fit"
-            onClick={getVisitor}
-          >
-            Search
-          </button>
-          <button
-            className="px-2 py-1 bg-slate-600 text-white rounded-md w-fit h-fit"
-            onClick={() => {
-              setPhoneNo('');
-              setVisitor(null);
-            }}
-          >
-            Reset
-          </button>
-        </div>
+    <div className="flex  gap-4 flex-col items-start justify-start md:flex-row md:items-center">
+      <input
+        placeholder="Phone number"
+        type="tel"
+        required
+        value={phoneNo}
+        onChange={handlePhoneNoChange}
+      />
+      <div className="flex gap-4 items-start justify-start">
+        <button
+          className="px-2 py-1 bg-slate-600 text-white rounded-md w-fit h-fit"
+          onClick={getVisitor}
+        >
+          Search
+        </button>
+        <button
+          className="px-2 py-1 bg-slate-600 text-white rounded-md w-fit h-fit"
+          onClick={() => {
+            setPhoneNo("");
+            setVisitor(null);
+          }}
+        >
+          Reset
+        </button>
       </div>
-      {/* {visitor ? <EntryVisitorData visitor={visitor} /> : null} */}
     </div>
   );
 };
