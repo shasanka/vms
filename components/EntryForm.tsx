@@ -85,16 +85,7 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
     mutation.mutateAsync(data);
   };
   const { Image: Im } = useQRCode();
-  const [data, setData] = useState("No result");
-  const [error, setError] = useState("No Error");
-  // const [result, setResult] = useState("No result");
-
-  const router = useRouter();
-  const handleDecode = (result: string) => {
-    console.log("🚀 ~ file: EntryForm.tsx:94 ~ handleDecode ~ result:", result)
-    // Navigate to the result page with the decoded data
-    router.replace(result);
-  };
+ 
 
   return (
     <div>
@@ -129,7 +120,8 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
       </form>
       {entry ? (
         <Im
-          text={`http://localhost:3000/entry/${entry._id}`}
+          // text={`${process.env.NEXT_PUBLIC_LINK}/entry/${entry._id}`}
+          text={`${entry._id}`}
           options={{
             type: "image/jpeg",
             quality: 0.3,
@@ -144,16 +136,7 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
           }}
         />
       ) : null}
-      <QrScanner
-        onDecode={(result) => {
-          setData(result);
-          handleDecode(result);
-        }}
-        onError={(error) => setError(error.message)}
-      />
-      <pre>{data}</pre>
-      <pre>{JSON.stringify(error)}</pre>
-      {/* <pre>{JSON.stringify(result)}</pre> */}
+     
     </div>
   );
 };
