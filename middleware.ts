@@ -17,9 +17,7 @@ export default withAuth(
     if (req.nextauth.token?.role === 'ROLE_OFFICE') {
         return NextResponse.rewrite(`${origin}/entry`)
     }
-    // if (req.nextauth.token?.role === 'ROLE_SECURITY') {
-    //     return NextResponse.rewrite(`${origin}/entry`)
-    // }
+    
   },
   {
     callbacks: {
