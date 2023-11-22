@@ -6,33 +6,38 @@ import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import { useSnackbar } from "notistack";
 import { IEntry } from "@/interface/common";
+import { useSession } from "next-auth/react";
 
 const EntryPageComponents = () => {
-  const {enqueueSnackbar} =useSnackbar()
+  const { enqueueSnackbar } = useSnackbar();
   const [shouldScan, setShouldScan] = useState<boolean>(false);
-  const [entryData , setEntryData] = useState<IEntry | null>(null)
-  const [error,setError] = useState<string|null>(null)
-
+  const [entryData, setEntryData] = useState<IEntry | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { data: session } = useSession();
 
   // const router = useRouter();
   const handleDecode = async (result: string) => {
-
-    try{
-
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/entry/${result}`)
-      if(res.status === 200){
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/entry/${result}`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.user.accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (res.status === 200) {
         setShouldScan(false);
-        setEntryData(res.data.data)
-        
+        setEntryData(res.data.data);
       }
-    }catch(e){
+    } catch (e) {
       const err = e as AxiosError;
       enqueueSnackbar(err.response?.statusText, {
         variant: "error",
         autoHideDuration: 1500,
       });
     }
-
   };
   return (
     <div className="flex flex-col gap-4">
