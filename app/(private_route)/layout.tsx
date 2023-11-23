@@ -40,8 +40,8 @@ const PrivateLayout = ({ children }: { children: ReactNode }) => {
                   </button>
                   <Link href="/home" className="flex ml-2 md:mr-24">
                     <Image
-                      height={20}
-                      width={20}
+                      height={30}
+                      width={30}
                       src="https://flowbite.com/docs/images/logo.svg"
                       className="h-8 mr-3"
                       alt="FlowBite Logo"

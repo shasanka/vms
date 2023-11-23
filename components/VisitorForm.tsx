@@ -13,7 +13,10 @@ export interface State {
   name: string;
 }
 
-const VisitorForm = () => {
+interface IVisitorFormProps{
+  onSuccessFullSubmit? :()=>void
+}
+const VisitorForm = ({onSuccessFullSubmit}:IVisitorFormProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const { data: session } = useSession();
   const {
@@ -38,7 +41,7 @@ const VisitorForm = () => {
       phoneNumber: Number(data.phoneNumber),
       email: data.email,
       address: data.address,
-      state: data.state || states[0].id,
+      state: data.state || states[0].name,
       district: data.district || districts[0].name,
       pincode: Number(data.pincode) || pincodes[0],
       idProofType: Number(data.idProofType),
@@ -66,6 +69,7 @@ const VisitorForm = () => {
           },
         });
         reset();
+        if(onSuccessFullSubmit) onSuccessFullSubmit()
       } 
     } catch (e: any) {
       const err = e as AxiosError;
@@ -143,7 +147,7 @@ const VisitorForm = () => {
           onChange={handleStateChange}
         >
           {states.map((state: State, idx) => (
-            <option key={idx} value={state.id}>
+            <option key={idx} value={state.name}>
               {state.name}
             </option>
           ))}
@@ -195,7 +199,7 @@ const VisitorForm = () => {
 export default VisitorForm;
 
 
-interface ApiResponse {
+export interface ApiResponse {
   message: string;
   // other properties if needed
 }

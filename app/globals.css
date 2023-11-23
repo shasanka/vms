@@ -27,7 +27,7 @@ body {
 } */
 
 input {
-  @apply sm:w-[200px] md:w-[400px] border border-gray-200 py-2 px-6 bg-zinc-100/40 read-only:text-gray-400;
+  @apply min-w-[300px] border border-gray-200 py-2 px-6 bg-zinc-100/40 read-only:text-gray-400;
 }
 select {
   @apply sm:w-[200px] md:w-[400px] border border-gray-200 py-2 px-6 bg-zinc-100/40;

@@ -30,7 +30,7 @@ const SignIn = () => {
       const res = await signIn("credentials", {
         email: user.email,
         password: user.password,
-        callbackUrl:'/home'
+        callbackUrl: "/home",
         // redirect: false,
       });
 
@@ -47,21 +47,20 @@ const SignIn = () => {
     <>
       <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
-            <div className="flex items-center justify-start">
-            
-              <Link href="/home" className="flex ml-2 md:mr-24">
-                <Image
-                height={20}
-                width={20}
-                  src="https://flowbite.com/docs/images/logo.svg"
-                  className="h-8 mr-3"
-                  alt="FlowBite Logo"
-                />
-                <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
-                  Assam Police
-                </span>
-              </Link>
-            </div>
+          <div className="flex items-center justify-start">
+            <Link href="/home" className="flex ml-2 md:mr-24">
+              <Image
+                height={30}
+                width={30}
+                src="https://flowbite.com/docs/images/logo.svg"
+                className="h-8 mr-3"
+                alt="FlowBite Logo"
+              />
+              <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
+                Assam Police
+              </span>
+            </Link>
+          </div>
         </div>
       </nav>
       <div className="grid place-items-center h-screen">

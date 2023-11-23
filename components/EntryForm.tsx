@@ -1,14 +1,22 @@
 "use client";
 import { IEntry, IVisitor } from "@/interface/common";
-import { QrScanner } from "@yudiel/react-qr-scanner";
 import axios, { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 import { useQRCode } from "next-qrcode";
-import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
+import Pdf from "./shared/Pdf";
+import {
+  BlobProvider,
+  PDFDownloadLink,
+  PDFViewer,
+  usePDF,
+} from "@react-pdf/renderer";
+import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+import { QRCodeCanvas } from "qrcode.react";
+
 interface IEntryFormProps {
   visitor: IVisitor;
 }
@@ -39,9 +47,9 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
             },
           }
         );
-        console.log("🚀 ~ file: EntryForm.tsx:37 ~ mutationFn: ~ res:", res);
         if (res.status === 201) {
           setEntry(res.data.data);
+
           enqueueSnackbar("Entry added successfully", {
             variant: "success",
             anchorOrigin: {
@@ -50,6 +58,8 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
             },
             autoHideDuration: 1500,
           });
+
+          return res.data.data;
         } else {
           setEntry(null);
           enqueueSnackbar("Unable to add entry", {
@@ -82,22 +92,38 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
   }, [visitor]);
 
   const submit: SubmitHandler<Partial<IEntry>> = async (data) => {
-    mutation.mutateAsync(data);
+    const res = await mutation.mutateAsync(data);
   };
-  const { Image: Im } = useQRCode();
- 
+
+  const [qrUrl, setQrUrl] = useState<string | null>(null);
+  useEffect(() => {
+    try {
+      const qrCodeCanvasRef = document.getElementById(
+        "QrCode"
+      ) as HTMLCanvasElement;
+      if (qrCodeCanvasRef) {
+        const qrCodeDataUri = qrCodeCanvasRef
+          .toDataURL("image/jpg", 0.3)
+          .replace("image/jpeg", "image/octet-stream");
+        if (qrCodeDataUri) setQrUrl(qrCodeDataUri);
+      }
+    } catch (E) {
+      setQrUrl(null);
+      enqueueSnackbar("Error in qr generation", {
+        variant: "error",
+        autoHideDuration: 1500,
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "top",
+        },
+      });
+    }
+  }, [entry?._id]);
 
   return (
-    <div>
+    <>
       <form onSubmit={handleSubmit(submit)}>
-        <div className="flex flex-col gap-4 sm:flex-row md:flex-row lg:flex-row items-center">
-          <input
-            placeholder="Visitor ID"
-            type="text"
-            readOnly
-            required
-            {...register("visitorId")}
-          />
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center ">
           <input
             placeholder="Whom to meet?"
             type="text"
@@ -118,26 +144,25 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
           </button>
         </div>
       </form>
-      {entry ? (
-        <Im
-          // text={`${process.env.NEXT_PUBLIC_LINK}/entry/${entry._id}`}
-          text={`${entry._id}`}
-          options={{
-            type: "image/jpeg",
-            quality: 0.3,
-            errorCorrectionLevel: "M",
-            margin: 3,
-            scale: 4,
-            width: 200,
-            color: {
-              dark: "#010599FF",
-              light: "#FFBF60FF",
-            },
-          }}
-        />
-      ) : null}
-     
-    </div>
+      {entry && <QRCodeCanvas id="QrCode" value={`${entry._id}`} />}
+      {entry && visitor && qrUrl && (
+        <div className="bg-gray-600 text-white px-2 py-1 w-fit h-fit rounded-md hover:bg-gray-700">
+          <PDFDownloadLink
+            document={<Pdf entry={entry} visitor={visitor} qrUrl={qrUrl} />}
+          >
+            {({ blob, url, loading, error }) =>
+              loading ? "Loading document..." : "Download now!"
+            }
+          </PDFDownloadLink>
+        </div>
+      )}
+      {entry && visitor && qrUrl && (
+          <Pdf entry={entry} visitor={visitor} qrUrl={qrUrl} />
+        // <PDFViewer className="w-full h-[500px]">
+        //   <Pdf entry={entry} visitor={visitor} qrUrl={qrUrl} />
+        // </PDFViewer>
+      )}
+    </>
   );
 };
 

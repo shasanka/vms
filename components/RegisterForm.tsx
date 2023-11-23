@@ -2,6 +2,7 @@
 import React, { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export interface IUser {
   username: string;
@@ -64,10 +65,12 @@ const RegisterForm = () => {
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-start">
             <Link href="/home" className="flex ml-2 md:mr-24">
-              <img
+              <Image
                 src="https://flowbite.com/docs/images/logo.svg"
                 className="h-8 mr-3"
                 alt="FlowBite Logo"
+                height={30}
+                width={30}
               />
               <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
                 Assam Police

@@ -6,8 +6,8 @@ interface IDisplayItemProps {
 const DisplayItem = (item:IDisplayItemProps) => {
   return (
     <div className="flex flex-col items-center">
-      <h4 className="font-bold">{item.data}</h4>
-      <h6 className="text-small">{item.label}</h6>
+      <h4 className="font-medium">{item.data}</h4>
+      <h6 className="text-small font-light">{item.label}</h6>
     </div>
   );
 };

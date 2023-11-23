@@ -2,7 +2,6 @@
 //     children: ReactNode
 // }
 
-import mongoose from "mongoose";
 
 export enum IDProofType {
   VOTER_ID = 0,

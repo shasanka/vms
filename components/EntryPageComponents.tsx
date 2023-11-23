@@ -47,19 +47,20 @@ const EntryPageComponents = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      Entry Page
-      {!shouldScan ? (
-        <button
-          onClick={() => {
-            setEntryData(null)
-            setShouldScan((prevState) => !prevState)
-          }}
-          className="bg-gray-600 hover:bg-gray-700 w-fit px-2 py-1 text-white rounded-md"
-        >
-          Scan
-        </button>
-      ) : null}
+    <div className="flex flex-col">
+      <div className="flex justify-center">
+        {!shouldScan ? (
+          <button
+            onClick={() => {
+              setEntryData(null);
+              setShouldScan((prevState) => !prevState);
+            }}
+            className="bg-gray-600 hover:bg-gray-700 w-fit px-2 py-1 text-white rounded-md"
+          >
+            Scan
+          </button>
+        ) : null}
+      </div>
       {shouldScan ? (
         <QrScanner
           onDecode={(result) => {
@@ -72,7 +73,6 @@ const EntryPageComponents = () => {
           scanDelay={2000}
         />
       ) : null}
-      {/* <pre>{entryData && JSON.stringify(entryData)}</pre> */}
       {entryData && <EntryDisplay entry={entryData} />}
       <pre>{error}</pre>
     </div>
