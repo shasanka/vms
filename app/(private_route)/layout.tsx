@@ -43,6 +43,7 @@ const PrivateLayout = ({ children }: { children: ReactNode }) => {
                       height={30}
                       width={30}
                       src="https://flowbite.com/docs/images/logo.svg"
+                      // src="https://st1.latestly.com/wp-content/uploads/2023/05/IMG_0710.jpeg"
                       className="h-8 mr-3"
                       alt="FlowBite Logo"
                     />

@@ -2,19 +2,15 @@
 import { IEntry, IVisitor } from "@/interface/common";
 import axios, { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
-import { useQRCode } from "next-qrcode";
 import { useSnackbar } from "notistack";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect,  useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import Pdf from "./shared/Pdf";
 import {
-  BlobProvider,
   PDFDownloadLink,
   PDFViewer,
-  usePDF,
 } from "@react-pdf/renderer";
-import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
 import { QRCodeCanvas } from "qrcode.react";
 
 interface IEntryFormProps {
@@ -73,7 +69,6 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
         }
       } catch (e) {
         setEntry(null);
-        console.log("🚀 ~ file: EntryForm.tsx:34 ~ mutationFn: ~ res:", e);
         const err = e as AxiosError;
         enqueueSnackbar(err.response?.statusText, {
           variant: "error",
@@ -95,6 +90,8 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
     const res = await mutation.mutateAsync(data);
   };
 
+  const [v,setV] = useState<IVisitor|null>(null)
+  const [e,setE] = useState<Partial<IEntry>|null>(null)
   const [qrUrl, setQrUrl] = useState<string | null>(null);
   useEffect(() => {
     try {
@@ -118,7 +115,33 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
         },
       });
     }
-  }, [entry?._id]);
+  }, [e?._id]);
+  // }, [entry?._id]);
+
+
+  useEffect(()=>{
+    getData()
+  },[])
+
+  const getData = async()=>{
+    const vis  = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/visitor/9829889019`,{
+      headers: {
+        Authorization: `Bearer ${session?.user.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+    setV(vis.data.data[0])
+    const en  = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/entry/655e182b4ee47438f6d1084a`,{
+      headers: {
+        Authorization: `Bearer ${session?.user.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+    setE(en.data.data)
+
+    
+  }
+
 
   return (
     <>
@@ -144,23 +167,23 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
           </button>
         </div>
       </form>
-      {entry && <QRCodeCanvas id="QrCode" value={`${entry._id}`} />}
-      {entry && visitor && qrUrl && (
+      {e && <QRCodeCanvas id="QrCode" value={`${e._id}`} />}
+      {e && v && qrUrl && (
         <div className="bg-gray-600 text-white px-2 py-1 w-fit h-fit rounded-md hover:bg-gray-700">
           <PDFDownloadLink
-            document={<Pdf entry={entry} visitor={visitor} qrUrl={qrUrl} />}
+            document={<Pdf entry={e} visitor={v} qrUrl={qrUrl} />}
           >
             {({ blob, url, loading, error }) =>
-              loading ? "Loading document..." : "Download now!"
+              loading ? "Loading document..." : "Download PDF"
             }
           </PDFDownloadLink>
         </div>
       )}
-      {entry && visitor && qrUrl && (
-          <Pdf entry={entry} visitor={visitor} qrUrl={qrUrl} />
-        // <PDFViewer className="w-full h-[500px]">
-        //   <Pdf entry={entry} visitor={visitor} qrUrl={qrUrl} />
-        // </PDFViewer>
+      {e && v && qrUrl && (
+          // <Pdf entry={entry} visitor={visitor} qrUrl={qrUrl} />
+        <PDFViewer className="w-full h-[800px] mb-[100px]" >
+          <Pdf entry={e} visitor={v} qrUrl={qrUrl} />
+        </PDFViewer>
       )}
     </>
   );

@@ -28,6 +28,7 @@
     "next-auth": "^4.23.2",
     "next-qrcode": "^2.5.1",
     "notistack": "^3.0.1",
+    "pdfkit": "^0.14.0",
     "qrcode.react": "^3.1.0",
     "react": "^18",
     "react-date-range": "^1.4.0",
