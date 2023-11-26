@@ -38,7 +38,7 @@ const SignIn = () => {
         return setError("Invalid credentials");
       }
 
-      router.replace("/home");
+      // router.replace("/home");
     } catch (E) {
       console.log("Error in logging in:", E);
     }

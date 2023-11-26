@@ -167,7 +167,7 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
           </button>
         </div>
       </form>
-      {e && <QRCodeCanvas id="QrCode" value={`${e._id}`} />}
+      {e && <QRCodeCanvas id="QrCode" value={`${process.env.NEXT_PUBLIC_LINK}/api/v1/entry/${e._id}`} />}
       {e && v && qrUrl && (
         <div className="bg-gray-600 text-white px-2 py-1 w-fit h-fit rounded-md hover:bg-gray-700">
           <PDFDownloadLink

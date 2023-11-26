@@ -1,4 +1,5 @@
 import { IDistrict, IState } from "@/interface/common";
+import axios, { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 
@@ -24,11 +25,13 @@ export function useVisitorFormHooks() {
       setStates(statesData);
 
       if (statesData.length > 0) {
-        const firstState = statesData[0].id;
+        const firstState = statesData[0].name;
+        console.log("🚀 ~ file: useVisitorFormHooks.ts:29 ~ loadStatesData ~ firstState:", firstState)
         const districtsData = await getDistricts(
           firstState,
           session?.user.accessToken
         );
+        console.log("🚀 ~ file: useVisitorFormHooks.ts:33 ~ loadStatesData ~ districtsData:", districtsData)
 
         if (!districtsData) {
           setDistricts([]);
@@ -116,27 +119,30 @@ export const getStates = async (
 export const getDistricts = async (
   state: string,
   accessToken: string | undefined
-):Promise<IDistrict[]|null> => {
+): Promise<IDistrict[] | null> => {
   try {
-    const res = await fetch(
+    const res = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/state/${state}`,
       {
-        method: "GET",
-        headers: new Headers({
+        headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
-        }),
+        },
       }
     );
+    console.log("🚀 ~ file: useVisitorFormHooks.ts:132 ~ res:", res);
+    console.log("🚀 ~ file: useVisitorFormHooks.ts:138 ~ res.data.data.districts:", res.data.data.districts)
 
-    if (res.ok) {
-      const stateData = await res.json();
-      return stateData.data.districts as IDistrict[];
+    if (res.status === 200) {
+      return res.data.data.districts as IDistrict[];
     } else {
       return null;
     }
   } catch (error) {
-    console.error("Error in getDistricts:", error);
+    if(error instanceof AxiosError){
+      const axiosError  = error
+      console.error("Error in getDistricts:", axiosError.message);
+    }
     return null;
   }
 };
