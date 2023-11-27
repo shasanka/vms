@@ -16,6 +16,7 @@ import {
 } from "@react-pdf/renderer";
 import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
 import { useSnackbar } from "notistack";
+import { formatCreatedAt } from "@/utils/common";
 const styles = StyleSheet.create({
   page: {
     // flexDirection: "row",
@@ -65,6 +66,7 @@ const Pdf = ({ entry, visitor, qrUrl }: IPdfProps) => {
           <DataView label="Whom to meet" value={entry.whomToMeet!} />
 
           <DataView label="Department" value={entry.department!} />
+          <DataView label="Generated at" value={formatCreatedAt(entry.createdAt!)} />
 
           <DataView
             label="Visitor name"
@@ -79,6 +81,7 @@ const Pdf = ({ entry, visitor, qrUrl }: IPdfProps) => {
             value={IDProofType[visitor.idProofType]}
           />
           <DataView label="ID proof number" value={visitor.idProofNumber} />
+          
         </View>
       </Page>
     </Document>

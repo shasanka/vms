@@ -3,14 +3,11 @@ import { IEntry, IVisitor } from "@/interface/common";
 import axios, { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 import { useSnackbar } from "notistack";
-import React, { useEffect,  useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import Pdf from "./shared/Pdf";
-import {
-  PDFDownloadLink,
-  PDFViewer,
-} from "@react-pdf/renderer";
+import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import { QRCodeCanvas } from "qrcode.react";
 
 interface IEntryFormProps {
@@ -87,11 +84,9 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
   }, [visitor]);
 
   const submit: SubmitHandler<Partial<IEntry>> = async (data) => {
-    const res = await mutation.mutateAsync(data);
+    await mutation.mutateAsync(data);
   };
 
-  const [v,setV] = useState<IVisitor|null>(null)
-  const [e,setE] = useState<Partial<IEntry>|null>(null)
   const [qrUrl, setQrUrl] = useState<string | null>(null);
   useEffect(() => {
     try {
@@ -115,74 +110,59 @@ const EntryForm = ({ visitor }: IEntryFormProps) => {
         },
       });
     }
-  }, [e?._id]);
-  // }, [entry?._id]);
-
-
-  useEffect(()=>{
-    getData()
-  },[])
-
-  const getData = async()=>{
-    const vis  = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/visitor/9829889019`,{
-      headers: {
-        Authorization: `Bearer ${session?.user.accessToken}`,
-        "Content-Type": "application/json",
-      },
-    });
-    setV(vis.data.data[0])
-    const en  = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/entry/655e182b4ee47438f6d1084a`,{
-      headers: {
-        Authorization: `Bearer ${session?.user.accessToken}`,
-        "Content-Type": "application/json",
-      },
-    });
-    setE(en.data.data)
-
-    
-  }
-
+  }, [entry?._id]);
 
   return (
     <>
-      <form onSubmit={handleSubmit(submit)}>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center ">
-          <input
-            placeholder="Whom to meet?"
-            type="text"
-            required
-            {...register("whomToMeet")}
-          />
-          <input
-            placeholder="Department"
-            type="text"
-            required
-            {...register("department")}
-          />
-          <button
-            className="px-2 py-1 bg-slate-600 text-white rounded-md w-fit h-fit"
-            type="submit"
-          >
-            Generate QR
-          </button>
-        </div>
-      </form>
-      {e && <QRCodeCanvas id="QrCode" value={`${process.env.NEXT_PUBLIC_LINK}/api/v1/entry/${e._id}`} />}
-      {e && v && qrUrl && (
+      <div className="w-full lg:max-w-full  rounded-md border border-gray-200  shadow p-2 divide-y">
+        <h1 className="text-md mb-1">Add entry</h1>
+        {/* <div> */}
+          <form onSubmit={handleSubmit(submit)} className="pt-2">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center ">
+              <input
+                placeholder="Whom to meet?"
+                type="text"
+                required
+                {...register("whomToMeet")}
+              />
+              <input
+                placeholder="Department"
+                type="text"
+                required
+                {...register("department")}
+              />
+              <button
+                className="px-2 py-1 bg-slate-600 text-white rounded-md w-fit h-fit"
+                type="submit"
+              >
+                Generate QR
+              </button>
+            </div>
+          </form>
+        {/* </div> */}
+      </div>
+
+      {entry && (
+        <QRCodeCanvas
+          id="QrCode"
+          value={`${process.env.NEXT_PUBLIC_LINK}/api/v1/entry/${entry._id}`}
+        />
+      )}
+      {/* {entry && visitor && qrUrl && (
         <div className="bg-gray-600 text-white px-2 py-1 w-fit h-fit rounded-md hover:bg-gray-700">
           <PDFDownloadLink
-            document={<Pdf entry={e} visitor={v} qrUrl={qrUrl} />}
+            document={<Pdf entry={entry} visitor={visitor} qrUrl={qrUrl} />}
           >
             {({ blob, url, loading, error }) =>
               loading ? "Loading document..." : "Download PDF"
             }
           </PDFDownloadLink>
         </div>
-      )}
-      {e && v && qrUrl && (
-          // <Pdf entry={entry} visitor={visitor} qrUrl={qrUrl} />
-        <PDFViewer className="w-full h-[800px] mb-[100px]" >
-          <Pdf entry={e} visitor={v} qrUrl={qrUrl} />
+      )} */}
+      {entry && visitor && qrUrl && (
+        // <Pdf entry={entry} visitor={visitor} qrUrl={qrUrl} />
+        <PDFViewer className="w-full h-[800px] mb-[100px]">
+          <Pdf entry={entry} visitor={visitor} qrUrl={qrUrl} />
         </PDFViewer>
       )}
     </>
